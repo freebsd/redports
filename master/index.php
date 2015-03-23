@@ -13,8 +13,7 @@ $app = new \Slim\Slim();
 
 /* Index */
 $app->get('/', function() use ($app) {
-   $app->response->headers->set('Content-Type', 'text/plain');
-   $app->response->write('nothing to see here');
+   $app->redirect('http://decke.github.io/redports/', 301);
 });
 
 /* Jobs */
