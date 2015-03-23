@@ -13,11 +13,11 @@ $app = new \Slim\Slim();
 
 /* Index */
 $app->get('/', function() use ($app) {
-   $app->redirect('http://decke.github.io/redports/', 301);
+   $app->redirect('https://decke.github.io/redports/', 301);
 });
 
 /* Jobs */
-$app->get('/jobs/:jobid', 'isAllowed', function($jobid) use ($app) {
+$app->get('/api/jobs/:jobid', 'isAllowed', function($jobid) use ($app) {
    $app->response->headers->set('Content-Type', 'application/json');
    $app->response->write(json_encode(array("jobid" => $jobid)));
 })->conditions(array('jobid' => '[0-9]{1,}'));
