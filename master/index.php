@@ -3,6 +3,7 @@
 require_once 'lib/Config.php';
 require_once 'lib/Session.php';
 require_once 'lib/functions.php';
+require_once 'lib/GitHubWebhook.php';
 
 require_once 'lib/Slim/Slim.php';
 
@@ -18,13 +19,18 @@ $app->get('/', function() use ($app) {
 
 /* GitHub Webhooks */
 $app->post('/github/', function() use ($app) {
+   $app->response->headers->set('Content-Type', 'text/plain');
+
    switch($app->request->headers->get('X-GitHub-Event'))
    {
       case 'ping':
          $app->response->write('pong');
       break;
       case 'push':
-         $app->response->write('Push event not implemented yet');
+         if(handleGitHubPushEvent(json_decode($app->request->post('payload'))))
+             $app->response->write('ok');
+         else
+             $app->halt(500, 'Webhook request failed');
       break;
       default:
          $app->response->write('Event type not implemented');
