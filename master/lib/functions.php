@@ -1,7 +1,6 @@
 <?php
 
 require_once 'lib/Session.php';
-require_once 'lib/Slim/Slim.php';
 
 function isAllowed()
 {

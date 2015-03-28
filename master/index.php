@@ -5,9 +5,7 @@ require_once 'lib/Session.php';
 require_once 'lib/functions.php';
 require_once 'lib/GitHubWebhook.php';
 
-require_once 'lib/Slim/Slim.php';
-
-\Slim\Slim::registerAutoloader();
+require_once 'vendor/autoload.php';
 
 $db = new PDO(Config::get('datasource'));
 $app = new \Slim\Slim();
