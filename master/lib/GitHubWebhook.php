@@ -9,9 +9,11 @@ function getUserConfig($commitpath)
 {
    $defaultconfig = Config::get('userconfig');
 
-   $config = yaml_parse_url("https://raw.githubusercontent.com/".$commitpath."/.redports.yml");
-   if($config === false)
+   $file = file_get_contents("https://raw.githubusercontent.com/".$commitpath."/.redports.json");
+   if($file === false)
       return $defaultconfig;
+
+   $config = json_decode($file, true);
 
    foreach($config as $key => $value)
    {
