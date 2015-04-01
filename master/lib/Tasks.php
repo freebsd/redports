@@ -15,8 +15,8 @@ class Tasks
    function addTask($payload)
    {
       $sequ = $this->_db->incr('sequ:tasks');
-      $this->_db->lPush('alltasks', $sequ);
       $this->_db->set('tasks:'.$sequ, json_encode($payload));
+      $this->_db->lPush('alltasks', $sequ);
 
       return true;
    }
