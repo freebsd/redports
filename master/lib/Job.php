@@ -5,7 +5,7 @@ class Job
    protected $_db;
    protected $_jobid = null;
    protected $_data = null;
-   protected $_queues = array('preparequeue', 'waitqueue', 'runqueue', 'archivequeue');
+   protected $_queues = array('newqueue', 'preparequeue', 'waitqueue', 'runqueue', 'archivequeue');
 
    function __construct($jobid = null)
    {
@@ -62,7 +62,7 @@ class Job
    function setJobData($data)
    {
       if(!isset($data['queue']))
-         $data['queue'] = 'preparequeue';
+         $data['queue'] = $this->_queues[0];
 
       if(!isset($data['repository']))
          return false;
