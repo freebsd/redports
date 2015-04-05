@@ -9,22 +9,20 @@ class Machines
       $this->_db = Config::getDatabaseHandle();
    }
 
-   function addMachine($name, $data)
+   function addMachine($name)
    {
       if($this->_db->sAdd('machines', $name) != 1)
          return false;
-
-      $this->_db->set('machines:'.$name, json_encode($data));
 
       return true;
    }
 
    function getMachine($name)
    {
-      if(($data = $this->_db->get('machines:'.$name)) === false)
+      if(!$this->exists($name))
          return false;
 
-      return json_decode($data);
+      return new Machine($name);
    }
 
    function deleteMachine($name)

@@ -24,14 +24,18 @@ class Session
       session_start();
    }
 
-   static function login($secret)
+   static function login($machineid, $secret)
    {
-      /* TODO: check if token found in database */
-      return false;
+      $machines = new Machines();
+      if(($machine = $machines->getMachine($machineid)) === false)
+         return false;
+
+      if($machine->getToken() !== $secret)
+         return false;
 
       /* login successfull */
       $_SESSION['authenticated'] = true;
-      $_SESSION['machineid'] = 0;
+      $_SESSION['machineid'] = $machine->getName();
 
       return true;
    }
