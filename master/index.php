@@ -21,21 +21,14 @@ $app->get('/', function() use ($app) {
 $app->post('/github/', function() use ($app) {
    $app->response->headers->set('Content-Type', 'text/plain');
 
-   switch($app->request->headers->get('X-GitHub-Event'))
-   {
-      case 'ping':
-         $app->response->write('pong');
-      break;
-      case 'push':
-         if(handleGitHubPushEvent(json_decode($app->request->post('payload'))))
-             $app->response->write('ok');
-         else
-             $app->halt(500, 'Webhook request failed');
-      break;
-      default:
-         $app->response->write('Event type not implemented');
-      break;
-   }
+   $github = new GitHubWebhook();
+   $result = $github->handleEvent($app->request->headers->get('X-GitHub-Event'),
+      $app->request->post('payload'));
+
+   if($result['code'] == 200)
+      $app->response->write($result['message']);
+   else
+      $app->halt($result['code'], $result['message']);
 });
 
 /* Jobs */
