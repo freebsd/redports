@@ -5,7 +5,7 @@ class Job
    protected $_db;
    protected $_jobid = null;
    protected $_data = null;
-   protected $_queues = array('newqueue', 'preparequeue', 'waitqueue', 'runqueue', 'archivequeue');
+   protected $_queues = array('preparequeue', 'waitqueue', 'runqueue', 'archivequeue');
 
    function __construct($jobid = null)
    {
@@ -33,7 +33,7 @@ class Job
 
          $this->_db->sAdd('alljobs', $this->_jobid);
          $this->_db->sAdd('repojobs:'.$this->getRepository(), $this->_jobid);
-         $this->_db->sAdd($this->getQueue(), $this->_jobid);
+         $this->_db->zAdd($this->getQueue(), $this->getPriority(), $this->_jobid);
       }
 
       return $this->_db->set('jobs:'.$this->_jobid, json_encode($this->_data));
@@ -54,6 +54,21 @@ class Job
       return $this->_data['repository'];
    }
 
+   function getPriority()
+   {
+      return $this->_db->zScore($this->getQueue(), $this->_jobid);
+   }
+
+   function incPriority($inc)
+   {
+      return $this->_db->zIncrBy($this->getQueue(), $inc, $this->_jobid);
+   }
+
+   function setPriority($newprio)
+   {
+      return $this->incPriority($newprio-$this->getPriority());
+   }
+
    function getJobData()
    {
       return $this->_data;
@@ -63,6 +78,9 @@ class Job
    {
       if(!isset($data['queue']))
          $data['queue'] = $this->_queues[0];
+
+      if(!isset($data['priority']))
+         $data['priority'] = 50;
 
       if(!isset($data['repository']))
          return false;
@@ -79,10 +97,15 @@ class Job
          return false;
       }
 
-      if($this->_db->sMove($this->getQueue(), $queue, $this->getJobId()) !== true)
+      $score = $this->getPriority();
+
+      if($this->_db->zRem($this->getQueue(), $this->_jobid) !== true)
          return false;
 
       $this->_data['queue'] = $queue;
+
+      if($this->_db->zAdd($this->getQueue(), $score, $this->_jobid) !== true)
+         return false;
 
       return $this->save();
    }

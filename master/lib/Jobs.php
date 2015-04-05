@@ -17,5 +17,15 @@ class Jobs
 
       return $job->save();
    }
+
+   function getNextJob($queue)
+   {
+      return $this->_db->zRangeByScore($queue, "-inf", "+inf", array('limit' => array(0, 1));
+   }
+
+   function countJobs($queue)
+   {
+      return $this->_db->zSize($queue);
+   }
 }
 
