@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Session.php';
-
 function isAllowed()
 {
    $app = \Slim\Slim::getInstance();

@@ -1,12 +1,8 @@
 <?php
 
-require_once 'lib/Config.php';
-require_once 'lib/Session.php';
-require_once 'lib/functions.php';
-require_once 'lib/GitHubWebhook.php';
-require_once 'lib/Tasks.php';
-
 require_once 'vendor/autoload.php';
+require_once 'lib/autoload.php';
+require_once 'lib/functions.php';
 
 $app = new \Slim\Slim();
 $redis = new Redis();
