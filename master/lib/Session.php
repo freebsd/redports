@@ -60,5 +60,16 @@ class Session
       session_destroy();
       return true;
    }
+
+   static function generateRandomToken()
+   {
+      $cstrong = true;
+      $bytes = '';
+
+      for($i = 0; $i <= 32; $i++)
+         $bytes .= bin2hex(openssl_random_pseudo_bytes(8, $cstrong));
+
+      return hash('sha256', $bytes);
+   }
 }
 
