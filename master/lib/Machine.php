@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Stores various settings of a client machine including
+ * a token and credentials for authentication.
+ *
+ * @author     Bernhard Froehlich <decke@bluelife.at>
+ * @copyright  2015 Bernhard Froehlich
+ * @license    BSD License (2 Clause)
+ * @link       https://decke.github.io/redports/
+ */
 class Machine
 {
    protected $_db;

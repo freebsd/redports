@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Group of jobs which belong together somehow
+ *
+ * @author     Bernhard Froehlich <decke@bluelife.at>
+ * @copyright  2015 Bernhard Froehlich
+ * @license    BSD License (2 Clause)
+ * @link       https://decke.github.io/redports/
+ */
 class Jobgroup
 {
    protected $_db;

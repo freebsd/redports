@@ -1,8 +1,19 @@
 <?php
 
+/**
+ * Handler for GitHub Webhooks
+ *
+ * Whenever GitHub informs us about a new push/commit we
+ * need to extract the information and create some new
+ * jobs for all affected ports.
+ *
+ * @author     Bernhard Froehlich <decke@bluelife.at>
+ * @copyright  2015 Bernhard Froehlich
+ * @license    BSD License (2 Clause)
+ * @link       https://decke.github.io/redports/
+ */
 class GitHubWebhook
 {
-
    function __construct()
    {
    }

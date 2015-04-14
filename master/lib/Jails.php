@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Manage jails for various FreeBSD versions
+ *
+ * @author     Bernhard Froehlich <decke@bluelife.at>
+ * @copyright  2015 Bernhard Froehlich
+ * @license    BSD License (2 Clause)
+ * @link       https://decke.github.io/redports/
+ */
 class Jails
 {
    protected $_db;

@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Build job for an individual port on an individual jail
+ *
+ * @author     Bernhard Froehlich <decke@bluelife.at>
+ * @copyright  2015 Bernhard Froehlich
+ * @license    BSD License (2 Clause)
+ * @link       https://decke.github.io/redports/
+ */
 class Job
 {
    protected $_db;
