@@ -1,0 +1,28 @@
+#!/usr/local/bin/php
+<?php
+
+require_once '../vendor/autoload.php';
+require_once '../lib/autoload.php';
+
+if($argc != 2)
+  die("Usage: ".basename($argv[0])." <machine>\n");
+
+$redis = new Redis();
+$redis->pconnect(Config::get('datasource'));
+
+$machines = new Machines();
+
+if(!$machines->exists($argv[1]))
+{
+   printf("Creating machine.\n");
+   $machine = $machines->createMachine($argv[1]);
+}
+else
+{
+   printf("Machine already exists.\n");
+   $machine = $machines->getMachine($argv[1]);
+}
+
+printf("Machine: %s\n", $machine->getName());
+printf("Token:   %s\n", $machine->getToken());
+
