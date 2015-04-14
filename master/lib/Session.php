@@ -5,6 +5,9 @@ class Session
    function __construct()
    {
       self::initialize();
+
+      if(isset($_COOKIE['SESSIONID']))
+         session_start();
    }
 
    static function initialize()
@@ -21,7 +24,13 @@ class Session
       // prevent caching by sending no-cache header
       session_cache_limiter('nocache');
 
-      session_start();
+      // rename session
+      session_name('SESSIONID');
+   }
+
+   static function getSessionId()
+   {
+      return session_id();
    }
 
    static function login($machineid, $secret)
@@ -32,6 +41,9 @@ class Session
 
       if($machine->getToken() !== $secret)
          return false;
+
+      if(session_id() === '')
+         session_start();
 
       /* login successfull */
       $_SESSION['authenticated'] = true;

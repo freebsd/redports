@@ -4,8 +4,10 @@ require_once 'vendor/autoload.php';
 require_once 'lib/autoload.php';
 require_once 'lib/functions.php';
 
+$session = new Session();
+
 $app = new \Slim\Slim();
-$app->response->headers->set('Content-Type', 'application/json');
+$app->response->headers->set('Content-Type', 'text/plain');
 
 $redis = new Redis();
 $redis->pconnect(Config::get('datasource'));
@@ -30,11 +32,19 @@ $app->post('/github/', function() use ($app) {
 });
 
 /* Authentication - Login */
-$app->post('/auth/', function() use ($app) {
-   if(Session::login($_POST['id'], $_POST['secret']))
-      $app->response->write(json_encode(array("status" => "okay")));
+$app->post('/auth/', function() use ($app, $session) {
+   $app->response->headers->set('Content-Type', 'application/json');
+
+   if(!isset($_POST['machineid']) || !isset($_POST['secret']))
+      $app->halt(403, 'Authentication failed');
+   else if(!$session->login($_POST['machineid'], $_POST['secret']))
+      $app->halt(403, 'Authentication failed');
    else
-      $app->response->write(json_encode(array("status" => "failed")));
+      $app->response->write(json_encode(array('sessionid' => $session->getSessionId())));
+});
+
+$app->get('/auth/', function() use ($app) {
+   $app->halt(400, 'Only POST method allowed for authentication');
 });
 
 /* Jails - List all jails */
@@ -86,6 +96,12 @@ $app->post('/jobs/:jobid/finish', 'isAllowed', function($jobid) use ($app) {
 /* Jobgroup - List details of jobgroup */
 $app->get('/group/:groupid/', 'isAllowed', function($groupid) use ($app) {
    $app->halt(501, 'Not implemented');
+});
+
+
+/* 404 - not found */
+$app->notFound(function() use ($app) {
+   $app->halt(404, 'Not found');
 });
 
 $app->run();
