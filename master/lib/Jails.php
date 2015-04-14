@@ -27,6 +27,11 @@ class Jails
       return json_decode($data);
    }
 
+   function getJails()
+   {
+      return $this->_db->sMembers('jails');
+   }
+
    function deleteJail($name)
    {
       $this->_db->sRemove('jails', $name);

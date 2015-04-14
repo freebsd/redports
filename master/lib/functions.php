@@ -5,9 +5,7 @@ function isAllowed()
    $app = \Slim\Slim::getInstance();
 
    if(!Session::isAuthenticated()){
-      $app->flash('loginerror', 'No permissions.');
-      $app->flashKeep();
-      $app->redirect('/login');
+      $app->halt(403, 'You are not authenticated');
    }
 }
 
