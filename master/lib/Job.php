@@ -33,7 +33,7 @@ class Job
 
          $this->_db->sAdd('alljobs', $this->_jobid);
          $this->_db->sAdd('repojobs:'.$this->getRepository(), $this->_jobid);
-         $this->_db->zAdd($this->getQueue(), $this->getPriority(), $this->_jobid);
+         $this->_db->zAdd($this->getFullQueue(), $this->getPriority(), $this->_jobid);
       }
 
       return $this->_db->set('jobs:'.$this->_jobid, json_encode($this->_data));
@@ -42,6 +42,11 @@ class Job
    function getJobId()
    {
       return $this->_jobid;
+   }
+
+   function getFullQueue()
+   {
+      return $this->_data['queue'].':'.$this->_data['jail'];
    }
 
    function getQueue()
@@ -56,12 +61,12 @@ class Job
 
    function getPriority()
    {
-      return $this->_db->zScore($this->getQueue(), $this->_jobid);
+      return $this->_db->zScore($this->getFullQueue(), $this->_jobid);
    }
 
    function incPriority($inc)
    {
-      return $this->_db->zIncrBy($this->getQueue(), $inc, $this->_jobid);
+      return $this->_db->zIncrBy($this->getFullQueue(), $inc, $this->_jobid);
    }
 
    function setPriority($newprio)
@@ -82,6 +87,9 @@ class Job
       if(!isset($data['priority']))
          $data['priority'] = 50;
 
+      if(!isset($data['jail']))
+         return false;
+
       if(!isset($data['repository']))
          return false;
 
@@ -99,12 +107,12 @@ class Job
 
       $score = $this->getPriority();
 
-      if($this->_db->zRem($this->getQueue(), $this->_jobid) !== true)
+      if($this->_db->zRem($this->getFullQueue(), $this->_jobid) !== true)
          return false;
 
       $this->_data['queue'] = $queue;
 
-      if($this->_db->zAdd($this->getQueue(), $score, $this->_jobid) !== true)
+      if($this->_db->zAdd($this->getFullQueue(), $score, $this->_jobid) !== true)
          return false;
 
       return $this->save();
