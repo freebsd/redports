@@ -1,6 +1,6 @@
 <?php
 
 spl_autoload_register(function ($class) {
-    include 'lib/'.$class.'.php';
+    include dirname(__FILE__).'/'.$class.'.php';
 });
 
