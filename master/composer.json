@@ -1,6 +1,7 @@
 {
    "require": {
       "slim/slim": "2.*",
-      "knplabs/github-api": "~1.4"
+      "knplabs/github-api": "~1.4",
+      "chrisboulton/php-resque": "1.2.x"
    }
 }
