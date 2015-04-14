@@ -7,6 +7,7 @@ require_once 'lib/functions.php';
 $session = new Session();
 
 $app = new \Slim\Slim();
+$app->config('debug', Config::get('debug'));
 $app->response->headers->set('Content-Type', 'text/plain');
 
 $redis = new Redis();
@@ -101,7 +102,14 @@ $app->get('/group/:groupid/', 'isAllowed', function($groupid) use ($app) {
 
 /* 404 - not found */
 $app->notFound(function() use ($app) {
+   $app->response->headers->set('Content-Type', 'text/plain');
    $app->halt(404, 'Not found');
+});
+
+/* 500 - internal server error */
+$app->error(function(\Exception $e) use ($app) {
+   $app->response->headers->set('Content-Type', 'text/plain');
+   $app->halt(500, 'Internal Server Error');
 });
 
 $app->run();

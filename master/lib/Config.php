@@ -3,6 +3,7 @@
 class Config
 {
    protected static $settings = array(
+      'debug'      => true,
       'datasource' => '/var/run/redis/redis.sock',
       'https_only' => true,
       'userconfig' => array(
