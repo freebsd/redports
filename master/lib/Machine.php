@@ -4,7 +4,7 @@ class Machine
 {
    protected $_db;
    protected $_name;
-   protected $_data;
+   protected $_data = array();
 
    function __construct($name)
    {
@@ -16,7 +16,12 @@ class Machine
 
    function _load()
    {
-      $this->_data = json_decode($this->_db->get('machines:'.$this->_name));
+      if($this->_db->exists('machines:'.$this->_name))
+         $this->_data = json_decode($this->_db->get('machines:'.$this->_name), true);
+      else
+      {
+         $this->_data['token'] = $this->generateToken();
+      }
    }
 
    function save()
@@ -53,6 +58,17 @@ class Machine
    function getAllJobs()
    {
       return $this->_db->sMembers('machinejobs:'.$this->_name);
+   }
+
+   protected function generateToken()
+   {
+      $cstrong = true;
+      $bytes = '';
+
+      for($i = 0; $i <= 32; $i++)
+         $bytes .= bin2hex(openssl_random_pseudo_bytes(8, $cstrong));
+
+      return hash('sha256', $bytes);
    }
 }
 
