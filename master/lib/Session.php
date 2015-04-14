@@ -7,7 +7,12 @@ class Session
       self::initialize();
 
       if(isset($_COOKIE['SESSIONID']))
+      {
          session_start();
+
+         if($_SESSION['loginip'] != $_SERVER['REMOTE_ADDR'])
+            $this->logout();
+      }
    }
 
    static function initialize()
@@ -63,6 +68,8 @@ class Session
       /* login successfull */
       $_SESSION['authenticated'] = true;
       $_SESSION['machineid'] = $machine->getName();
+      $_SESSION['loginip'] = $_SERVER['REMOTE_ADDR'];
+      $_SESSION['useragent'] = $_SERVER['HTTP_USER_AGENT'];
 
       return true;
    }
@@ -81,8 +88,14 @@ class Session
 
    static function logout()
    {
-      unset($_SESSION['authenticated']);
-      unset($_SESSION['machineid']);
+      $_SESSION = array();
+
+      /* also destroy session cookie on client */
+      $params = session_get_cookie_params();
+      setcookie(session_name(), '', time() - 42000,
+         $params["path"], $params["domain"],
+         $params["secure"], $params["httponly"]
+      );
 
       session_destroy();
       return true;
