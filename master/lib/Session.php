@@ -12,6 +12,21 @@ class Session
 
    static function initialize()
    {
+      // Set Redis as session handler
+      ini_set('session.save_handler', 'redis');
+      ini_set('session.save_path', "unix:///var/run/redis/redis.sock?persistent=1");
+
+      // Specify hash function used for session ids
+      ini_set('session.hash_function', 'sha256');
+      ini_set('session.hash_bits_per_character', 5);
+      ini_set('session.entropy_length', 512);
+
+      // Set session lifetime in redis (8h)
+      ini_set('session.gc_maxlifetime', 28800);
+
+      // Set cookie lifetime on client
+      ini_set('session.cookie_lifetime', 0);
+
       // do not expose Cookie value to JavaScript (enforced by browser)
       ini_set('session.cookie_httponly', 1);
 
