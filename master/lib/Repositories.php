@@ -24,7 +24,7 @@ class Repositories
       if(($data = $this->_db->get('repositories:'.$name)) === false)
          return false;
 
-      return json_decode($data);
+      return json_decode($data, true);
    }
 
    function deleteRepository($name)

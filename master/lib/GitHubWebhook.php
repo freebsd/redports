@@ -15,7 +15,7 @@ class GitHubWebhook
             return array('code' => 200, 'message' => 'pong');
          break;
          case 'push':
-             if($this->push(json_decode($payload)))
+             if($this->push(json_decode($payload, true)))
                 return array('code' => 200, 'message' => 'ok');
              else
                 return array('code' => 500, 'message' => 'Webhook request failed');

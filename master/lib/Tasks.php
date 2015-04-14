@@ -31,7 +31,7 @@ class Tasks
 
       $this->_db->delete('tasks:'.$sequ);
 
-      return json_decode($data);
+      return json_decode($data, true);
    }
 }
 

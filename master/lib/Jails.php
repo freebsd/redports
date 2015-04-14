@@ -24,7 +24,7 @@ class Jails
       if(($data = $this->_db->get('jails:'.$name)) === false)
          return false;
 
-      return json_decode($data);
+      return json_decode($data, true);
    }
 
    function getJails()
