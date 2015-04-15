@@ -113,6 +113,19 @@ class Job
       return true;
    }
 
+   function get($field)
+   {
+      if(isset($this->_data[$field]))
+         return $this->_data[$field];
+
+      return null;
+   }
+
+   function set($field, $value)
+   {
+      $this->_data[$field] = $value;
+   }
+
    function moveToQueue($queue)
    {
       if(!in_array($queue, $this->_queues))

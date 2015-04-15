@@ -106,9 +106,32 @@ $app->get('/jobs/:jobid/', 'isAllowed', function($jobid) use ($app) {
       jsonResponse(200, $job->getJobData());
 })->conditions(array('jobid' => '[0-9]'));
 
-/* Jobs - Upload logfile/portstree ... */
-$app->post('/jobs/:jobid/upload', 'isAllowed', function($jobid) use ($app) {
-   textResponse(501, 'Not implemented');
+/* Jobs - Upload logfile ... */
+$app->put('/jobs/:jobid/logfile/:filename', 'isAllowed', function($jobid, $filename) use ($app) {
+   $job = new Job($jobid);
+   if(!$job->exists())
+      textResponse(404, "Job not found");
+
+   $filepath = Config::get('logdir').'/'.$jobid.'/'.basename($filename);
+
+   if(file_exists($filepath))
+      textResponse(403, "File already exists");
+   
+   if(!is_dir(dirname($filepath)))
+      mkdir(dirname($filepath), 0777, true);
+
+   $fi = fopen("php://input", "rb");
+   $fo = fopen($filepath, "w");
+
+   stream_copy_to_stream($fi, $fo);
+
+   fclose($fo);
+   fclose($fi);
+
+   $job->set('logfile', $filename);
+   $job->save();
+
+   textResponse(200);
 })->conditions(array('jobid' => '[0-9]'));
 
 /* Jobs - Finish a job (with resultcode and buildstatus) */
