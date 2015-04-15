@@ -37,8 +37,13 @@ class Queue
 
    function getNextJob()
    {
-      return $this->_db->zRangeByScore($this->getFullQueue(),
+      $jobid = $this->_db->zRangeByScore($this->getFullQueue(),
          "-inf", "+inf", array('limit' => array(0, 1)));
+
+      if(count($jobid) < 1)
+         return false;
+
+      return new Job($jobid);
    }
 
    function countJobs()

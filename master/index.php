@@ -80,8 +80,16 @@ $app->get('/queues/:queuename/:jailname/', 'isAllowed', function($queuename, $ja
 });
 
 /* Queues - Take next job */
-$app->get('/queues/:queuename/:jailname/take', 'isAllowed', function($queuename, $jailname) use ($app) {
-   textResponse(501, 'Not implemented');
+$app->get('/queues/waitqueue/:jailname/take', 'isAllowed', function($jailname) use ($app) {
+   $queue = new Queue('waitqueue', $jailname);
+   $job = $queue->getNextJob();
+   if($job === false)
+      textResponse(204);
+   else
+   {
+      $job->moveToQueue('runqueue');
+      jsonResponse(200, $job->getJobData());
+   }
 });
 
 /* Jobs - Create new job */

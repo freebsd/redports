@@ -18,7 +18,7 @@ function isAllowed()
    }
 }
 
-function jsonResponse($code, $data)
+function jsonResponse($code, $data = array())
 {
    $app = \Slim\Slim::getInstance();
    $app->response->setStatus($code);
@@ -31,7 +31,7 @@ function jsonResponse($code, $data)
    return true;
 }
 
-function textResponse($code, $data)
+function textResponse($code, $data = '')
 {
    $app = \Slim\Slim::getInstance();
    $app->response->setStatus($code);
