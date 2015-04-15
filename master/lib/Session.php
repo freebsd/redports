@@ -29,8 +29,9 @@ class Session
       ini_set('session.save_handler', 'redis');
       ini_set('session.save_path', "unix:///var/run/redis/redis.sock?persistent=1");
 
-      // Specify hash function used for session ids
-      ini_set('session.hash_function', 'sha256');
+      // Specify hash function used for session ids. Usually does not
+      // work on FreeBSD unless hash functions are compiled into the binary
+      //ini_set('session.hash_function', 'sha256');
       ini_set('session.hash_bits_per_character', 5);
       ini_set('session.entropy_length', 512);
 
