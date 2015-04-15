@@ -99,7 +99,11 @@ $app->get('/jobs/create', 'isAllowed', function() use ($app) {
 
 /* Jobs - Job details */
 $app->get('/jobs/:jobid/', 'isAllowed', function($jobid) use ($app) {
-   textResponse(501, 'Not implemented');
+   $job = new Job($jobid);
+   if(!$job->exists())
+      textResponse(404, 'Job not found');
+   else
+      jsonResponse(200, $job->getJobData());
 })->conditions(array('jobid' => '[0-9]'));
 
 /* Jobs - Upload logfile/portstree ... */

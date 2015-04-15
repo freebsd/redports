@@ -23,9 +23,17 @@ class Job
       $this->_load();
    }
 
-   function _load()
+   function exists()
    {
       if($this->_jobid == null)
+         return false;
+
+      return $this->_db->exists('jobs:'.$this->_jobid);
+   }
+
+   function _load()
+   {
+      if(!$this->exists())
          return false;
 
       if(($this->_data = $this->_db->get('jobs:'.$this->_jobid)) === false)
