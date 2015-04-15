@@ -22,11 +22,6 @@ $app->response->headers->set('Content-Type', 'text/plain');
 $redis = new Redis();
 $redis->pconnect(Config::get('datasource'));
 
-/* Index */
-$app->get('/', function() use ($app) {
-   $app->redirect('https://decke.github.io/redports/', 301);
-});
-
 /* GitHub Webhooks */
 $app->post('/github/', function() use ($app) {
    $github = new GitHubWebhook();
@@ -68,7 +63,20 @@ $app->get('/jails/:jailname/', 'isAllowed', function($jailname) use ($app) {
 
 /* Queues - statistics for a queue */
 $app->get('/queues/:queuename/:jailname/', 'isAllowed', function($queuename, $jailname) use ($app) {
-   textResponse(501, 'Not implemented');
+   $queue = new Queue($queuename, $jailname);
+
+   if($queue->exists())
+   {
+      $data = array(
+         'numjobs' => $queue->countJobs(),
+         'jail' => $jailname,
+         'queue' => $queuename
+      );
+
+      jsonResponse(200, $data);
+   }
+   else
+      textResponse(404, 'Queue unknown');
 });
 
 /* Queues - Take next job */

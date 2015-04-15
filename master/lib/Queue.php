@@ -38,12 +38,17 @@ class Queue
    function getNextJob()
    {
       return $this->_db->zRangeByScore($this->getFullQueue(),
-         "-inf", "+inf", array('limit' => array(0, 1));
+         "-inf", "+inf", array('limit' => array(0, 1)));
    }
 
    function countJobs()
    {
       return $this->_db->zSize($this->getFullQueue());
+   }
+
+   function exists()
+   {
+      return $this->_db->exists($this->getFullQueue());
    }
 }
 
