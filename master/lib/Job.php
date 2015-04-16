@@ -133,6 +133,18 @@ class Job
       return true;
    }
 
+   function unset($field)
+   {
+      if($field == 'jobid')
+         return false;
+
+      if(!isset($this->_data[$field]))
+         return false;
+
+      unset($this->_data[$field]);
+      return true;
+   }
+
    function moveToQueue($queue)
    {
       if(!in_array($queue, $this->_queues))

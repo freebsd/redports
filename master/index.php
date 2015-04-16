@@ -141,9 +141,24 @@ $app->put('/jobs/:jobid/logfile/:filename', 'isAllowed', function($jobid, $filen
    textResponse(200);
 })->conditions(array('jobid' => '[0-9]'));
 
-/* Jobs - Finish a job (with resultcode and buildstatus) */
+/* Jobs - Finish a job (with buildstatus and buildreason) */
 $app->post('/jobs/:jobid/finish', 'isAllowed', function($jobid) use ($app) {
-   textResponse(501, 'Not implemented');
+   $job = new Job($jobid);
+   if($job === false)
+      textResponse(204);
+
+   if(!isset($_POST['buildstatus']) || !isset($_POST['buildreason']))
+      textResponse(400, 'Post data missing');
+
+   $machine = new Machine(Session::getMachineId());
+   if(!$machine->hasJob($job->getJobId()))
+      textResponse(403, 'Job not assigned to you');
+
+   $job->unset('machine');
+   $job->set('buildstatus', $_POST['buildstatus']);
+   $job->set('buildreason', $_POST['buildreason']);
+   $job->moveToQueue('archivequeue');
+   jsonResponse(200, $job->getJobData());
 })->conditions(array('jobid' => '[0-9]'));
 
 /* Jobgroup - List details of jobgroup */
