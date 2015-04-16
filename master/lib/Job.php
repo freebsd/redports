@@ -46,6 +46,7 @@ class Job
       if($this->_jobid == null)
       {
          $this->_jobid = $this->_db->incr('sequ:jobs');
+         $this->_data['jobid'] = $this->_jobid;
 
          $this->_db->sAdd('alljobs', $this->_jobid);
          $this->_db->sAdd('repojobs:'.$this->getRepository(), $this->_jobid);
@@ -109,6 +110,8 @@ class Job
       if(!isset($data['repository']))
          return false;
 
+      $data['jobid'] = $this->getJobId();
+
       $this->_data = $data;
       return true;
    }
@@ -123,7 +126,11 @@ class Job
 
    function set($field, $value)
    {
+      if($field == 'jobid')
+         return false;
+
       $this->_data[$field] = $value;
+      return true;
    }
 
    function moveToQueue($queue)
