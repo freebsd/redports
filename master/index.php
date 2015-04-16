@@ -61,7 +61,7 @@ $app->get('/jails/:jailname/', 'isAllowed', function($jailname) use ($app) {
       jsonResponse(200, $jails->getJail($jailname));
 });
 
-/* Queues - statistics for a queue */
+/* Queues - info about a queue */
 $app->get('/queues/:queuename/:jailname/', 'isAllowed', function($queuename, $jailname) use ($app) {
    $queue = new Queue($queuename, $jailname);
 
@@ -86,8 +86,32 @@ $app->get('/queues/waitqueue/:jailname/take', 'isAllowed', function($jailname) u
 });
 
 /* Jobs - Create new job */
-$app->get('/jobs/create', 'isAllowed', function() use ($app) {
-   textResponse(501, 'Not implemented');
+$app->post('/jobs/create', 'isAllowed', function() use ($app) {
+   $queue = new Queue();
+
+   $jail = new Jails();
+   if(!$jail->exists($_POST['jail']))
+      textResponse(404, 'Jail unknown');
+
+   $repos = new Repositories();
+   if(!$repos->exists($_POST['repository']))
+      textResponse(404, 'Repository unknown');
+
+   $jobgroup = new Jobgroup($_POST['jobgroup']);
+   if($jobgroup->exists())
+      textResponse(403, 'Jobgroup already exists');
+
+   $data = array(
+      'port' => $_POST['port'],
+      'jail' => $_POST['jail'],
+      'repository' => $_POST['repository'],
+      'jobgroup' => $_POST['jobgroup']
+   );
+
+   $job = $queue->createJob($data);
+   $jobgroup->addJob($job->getJobId());
+
+   jsonResponse(200, $job->getJobData());
 });
 
 /* Jobs - Job details */

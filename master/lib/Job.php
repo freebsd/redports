@@ -110,6 +110,9 @@ class Job
       if(!isset($data['repository']))
          return false;
 
+      if(!isset($data['port']))
+         return false;
+
       $data['jobid'] = $this->getJobId();
 
       $this->_data = $data;
