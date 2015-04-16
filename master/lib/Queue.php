@@ -55,5 +55,19 @@ class Queue
    {
       return $this->_db->exists($this->getFullQueue());
    }
+
+   function getQueueInfo()
+   {
+      if(!$this->exists())
+         return false;
+
+      $data = array(
+         'numjobs' => $this->countJobs(),
+         'jail' => $this->_jail,
+         'queue' => $this->_queue
+      );
+
+      return $data;
+   }
 }
 

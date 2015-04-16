@@ -66,15 +66,7 @@ $app->get('/queues/:queuename/:jailname/', 'isAllowed', function($queuename, $ja
    $queue = new Queue($queuename, $jailname);
 
    if($queue->exists())
-   {
-      $data = array(
-         'numjobs' => $queue->countJobs(),
-         'jail' => $jailname,
-         'queue' => $queuename
-      );
-
-      jsonResponse(200, $data);
-   }
+      jsonResponse(200, $queue->getQueueInfo());
    else
       textResponse(404, 'Queue unknown');
 });
@@ -85,14 +77,12 @@ $app->get('/queues/waitqueue/:jailname/take', 'isAllowed', function($jailname) u
    $job = $queue->getNextJob();
    if($job === false)
       textResponse(204);
-   else
-   {
-      $machine = new Machine(Session::getMachineId());
-      $machine->addJob($job->getJobId());
-      $job->set('machine', $machine->getName());
-      $job->moveToQueue('runqueue');
-      jsonResponse(200, $job->getJobData());
-   }
+
+   $machine = new Machine(Session::getMachineId());
+   $machine->addJob($job->getJobId());
+   $job->set('machine', $machine->getName());
+   $job->moveToQueue('runqueue');
+   jsonResponse(200, $job->getJobData());
 });
 
 /* Jobs - Create new job */
@@ -103,6 +93,7 @@ $app->get('/jobs/create', 'isAllowed', function() use ($app) {
 /* Jobs - Job details */
 $app->get('/jobs/:jobid/', 'isAllowed', function($jobid) use ($app) {
    $job = new Job($jobid);
+
    if(!$job->exists())
       textResponse(404, 'Job not found');
    else
@@ -112,6 +103,7 @@ $app->get('/jobs/:jobid/', 'isAllowed', function($jobid) use ($app) {
 /* Jobs - Upload logfile ... */
 $app->put('/jobs/:jobid/logfile/:filename', 'isAllowed', function($jobid, $filename) use ($app) {
    $job = new Job($jobid);
+
    if(!$job->exists())
       textResponse(404, 'Job not found');
 
@@ -143,12 +135,13 @@ $app->put('/jobs/:jobid/logfile/:filename', 'isAllowed', function($jobid, $filen
 
 /* Jobs - Finish a job (with buildstatus and buildreason) */
 $app->post('/jobs/:jobid/finish', 'isAllowed', function($jobid) use ($app) {
-   $job = new Job($jobid);
-   if($job === false)
-      textResponse(204);
 
    if(!isset($_POST['buildstatus']) || !isset($_POST['buildreason']))
       textResponse(400, 'Post data missing');
+
+   $job = new Job($jobid);
+   if($job === false)
+      textResponse(204);
 
    $machine = new Machine(Session::getMachineId());
    if(!$machine->hasJob($job->getJobId()))
