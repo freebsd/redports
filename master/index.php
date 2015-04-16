@@ -87,6 +87,9 @@ $app->get('/queues/waitqueue/:jailname/take', 'isAllowed', function($jailname) u
       textResponse(204);
    else
    {
+      $machine = new Machine(Session::getMachineId());
+      $machine->addJob($job->getJobId());
+      $job->set('machine', $machine->getName());
       $job->moveToQueue('runqueue');
       jsonResponse(200, $job->getJobData());
    }
@@ -110,18 +113,22 @@ $app->get('/jobs/:jobid/', 'isAllowed', function($jobid) use ($app) {
 $app->put('/jobs/:jobid/logfile/:filename', 'isAllowed', function($jobid, $filename) use ($app) {
    $job = new Job($jobid);
    if(!$job->exists())
-      textResponse(404, "Job not found");
+      textResponse(404, 'Job not found');
+
+   $machine = new Machine(Session::getMachineId());
+   if(!$machine->hasJob($jobid))
+      textResponse(403, 'Job not assigned to you');
 
    $filepath = Config::get('logdir').'/'.$jobid.'/'.basename($filename);
 
    if(file_exists($filepath))
-      textResponse(403, "File already exists");
+      textResponse(403, 'File already exists');
    
    if(!is_dir(dirname($filepath)))
       mkdir(dirname($filepath), 0777, true);
 
-   $fi = fopen("php://input", "rb");
-   $fo = fopen($filepath, "w");
+   $fi = fopen('php://input', 'rb');
+   $fo = fopen($filepath, 'w');
 
    stream_copy_to_stream($fi, $fo);
 

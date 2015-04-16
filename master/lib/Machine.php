@@ -64,6 +64,11 @@ class Machine
       return true;
    }
 
+   function hasJob($jobid)
+   {
+      return $this->_db->sIsMember('machinejobs:'.$this->_name, $jobid);
+   }
+
    function getAllJobs()
    {
       return $this->_db->sMembers('machinejobs:'.$this->_name);
