@@ -10,6 +10,18 @@
  */
 
 spl_autoload_register(function ($class) {
-    include dirname(__FILE__).'/'.$class.'.php';
+    $filename = dirname(__FILE__).'/'.$class.'.php';
+
+    if(file_exists($filename)){
+       include $filename;
+       return;
+    }
+
+    $filename = dirname(__FILE__).'/Tasks/'.$class.'.php';
+
+    if(file_exists($filename)){
+       include $filename;
+       return;
+    }
 });
 

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export QUEUE="default"
+export REDIS_BACKEND="/var/run/redis/redis.sock"
+
+exec ../vendor/bin/resque
+

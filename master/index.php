@@ -22,6 +22,8 @@ $app->response->headers->set('Content-Type', 'text/plain');
 $redis = new Redis();
 $redis->pconnect(Config::get('datasource'));
 
+Resque::setBackend(Config::get('datasource'));
+
 /* GitHub Webhooks */
 $app->post('/github/', function() use ($app) {
    $github = new GitHubWebhook();
