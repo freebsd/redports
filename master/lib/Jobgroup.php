@@ -54,5 +54,18 @@ class Jobgroup
 
       return $this->_db->exists('jobgroup:'.$groupid);
    }
+
+   function getGroupInfo()
+   {
+      if(!$this->exists())
+         return false;
+
+      $data = array(
+         'groupname' => $this->getJobgroupId(),
+         'jobs' => $jobgroup->getJobs()
+      );
+
+      return $data;
+   }
 }
 

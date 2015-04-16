@@ -156,7 +156,12 @@ $app->post('/jobs/:jobid/finish', 'isAllowed', function($jobid) use ($app) {
 
 /* Jobgroup - List details of jobgroup */
 $app->get('/group/:groupid/', 'isAllowed', function($groupid) use ($app) {
-   textResponse(501, 'Not implemented');
+
+   $jobgroup = new Jobgroup($groupid);
+   if(!$jobgroup->exists())
+      textResponse(404, 'Jobgroup not found');
+
+   jsonResponse(200, $jobgroup->getGroupInfo());
 });
 
 
