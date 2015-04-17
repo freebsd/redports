@@ -22,7 +22,7 @@
          "Queue": "lib",
          "Repositories": "lib",
          "Session": "lib",
-         "Task": "lib"
+         "Task": "lib/Task"
       },
       "files": ["lib/functions.php"]
    }
