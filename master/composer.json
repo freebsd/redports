@@ -1,7 +1,29 @@
 {
+   "name": "redports/master",
+   "version": "2.0.0",
+   "description": "A fully hosted continuous integration platform for FreeBSD ports",
+   "homepage": "https://decke.github.io/redports/",
+   "license": "BSD",
    "require": {
       "slim/slim": "2.*",
       "knplabs/github-api": "~1.4",
-      "chrisboulton/php-resque": "dev-master as 1.2.x-dev"
+      "chrisboulton/php-resque": "dev-master as 1.2.x-dev",
+      "php": ">=5.4.0"
+   },
+   "autoload": {
+      "psr-0": {
+         "Config": "lib",
+         "GitHubWebhook": "lib",
+         "Jails": "lib",
+         "Job": "lib",
+         "Jobgroup": "lib",
+         "Machine": "lib",
+         "Machines": "lib",
+         "Queue": "lib",
+         "Repositories": "lib",
+         "Session": "lib",
+         "Task": "lib"
+      },
+      "files": ["lib/functions.php"]
    }
 }
