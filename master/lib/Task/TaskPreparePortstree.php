@@ -8,7 +8,7 @@
  * @license    BSD License (2 Clause)
  * @link       https://decke.github.io/redports/
  */
-class TaskPreparePortstree
+class Task_PreparePortstree
 {
    protected $_db;
 
