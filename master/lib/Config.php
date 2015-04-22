@@ -11,13 +11,14 @@
 class Config
 {
    protected static $settings = array(
-      'debug'      => true,
-      'datasource' => '/var/run/redis/redis.sock',
-      'logdir'     => __DIR__.'/../logs',
-      'https_only' => true,
+      'debug'          => true,
+      'datasource'     => '/var/run/redis/redis.sock',
+      'logdir'         => __DIR__.'/../logs',
+      'https_only'     => true,
+      'ircbridgetoken' => '',
       'userconfig' => array(
-          'jails' => array('10.0-RELEASE/amd64', '10.0-RELEASE/i386'),
-          'notify' => 'commit' /* commit, email, none */
+          'jails'   => array('10.0-RELEASE/amd64', '10.0-RELEASE/i386'),
+          'notify'  => 'commit' /* commit, email, none */
       )
    );
 
