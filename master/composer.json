@@ -1,6 +1,5 @@
 {
    "name": "redports/master",
-   "version": "2.0.0",
    "description": "A fully hosted continuous integration platform for FreeBSD ports",
    "homepage": "https://decke.github.io/redports/",
    "license": "BSD-2-Clause",
