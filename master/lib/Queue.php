@@ -13,21 +13,40 @@ class Queue
    protected $_db;
    protected $_queue;
    protected $_jail;
+   protected $_queues = array('preparequeue', 'waitqueue', 'runqueue', 'archivequeue');
 
    function __construct($queue, $jail)
    {
       $this->_db = Config::getDatabaseHandle();
-      $this->_queue = $queue;
-      $this->_jail = $jail;
+
+      if(in_array($queue, $this->_queues))
+         $this->_queue = $queue;
+      else
+         $this->_queue = $this->_queues[0];
+
+      $jails = new Jails();
+      if($jails->exists($jail))
+         $this->_jail = $jail;
+      else
+         trigger_error(E_USER_ERROR, "Jail is unknown");
    }
 
-   function createJob($data)
+   function createJob($data, $jobgroup = null)
    {
+      $data['queue'] = $this->_queue;
+      $data['jail'] = $this->_jail;
+
       $job = new Job();
       if($job->setJobData($data) !== true)
          return false;
 
-      return $job->save();
+      if($job->save() !== true)
+         return false;
+
+      if($jobgroup == null)
+         return true;
+
+      return $jobgroup->addJob($job->getJobId());
    }
 
    function getFullQueue()

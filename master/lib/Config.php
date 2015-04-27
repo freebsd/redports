@@ -17,7 +17,7 @@ class Config
       'https_only'     => true,
       'ircbridgetoken' => '',
       'userconfig' => array(
-          'jails'   => array('10.0-RELEASE/amd64', '10.0-RELEASE/i386'),
+          'jails'   => array('10.1-RELEASE-amd64', '10.1-RELEASE-i386'),
           'notify'  => 'commit' /* commit, email, none */
       )
    );

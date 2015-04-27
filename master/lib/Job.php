@@ -73,7 +73,7 @@ class Job
 
    function getRepository()
    {
-      return $this->_data['repository'];
+      return $this->_data['repository']['url'];
    }
 
    function getPriority()
@@ -136,7 +136,7 @@ class Job
       return true;
    }
 
-   function unset($field)
+   function del($field)
    {
       if($field == 'jobid')
          return false;

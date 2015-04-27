@@ -18,7 +18,7 @@ class GitHubWebhook
    {
    }
 
-   function handleEvent($event, $payload)
+   function handleEvent($event)
    {
       switch($event)
       {
@@ -26,7 +26,8 @@ class GitHubWebhook
             return array('code' => 200, 'message' => 'pong');
          break;
          case 'push':
-             if($this->push(json_decode($payload, true)))
+             $payload = json_decode(file_get_contents("php://input"), true);
+             if($this->push($payload))
                 return array('code' => 200, 'message' => 'ok');
              else
                 return array('code' => 500, 'message' => 'Webhook request failed');
@@ -39,22 +40,22 @@ class GitHubWebhook
 
    function push($payload)
    {
-      $config = $this->getUserConfig($payload['repository']['full_name'].'/'.$payload['commits'][0]['id']);
+      $config = $this->_getUserConfig($payload['repository']['full_name'].'/'.$payload['commits'][0]['id']);
 
       $ports = array();
       foreach($payload['commits'] as $commit)
       {
          foreach($commit['added'] as $file)
          {
-            $port = strpos($file, '/', strpos($file, '/')+1);
-            if(preg_match('^([a-zA-Z0-9_+.-]+)/([a-zA-Z0-9_+.-]+)$', $port) === true && strlen($port) < 100)
+            $port = substr($file, 0, strpos($file, '/', strpos($file, '/')+1));
+            if(preg_match('/^([a-zA-Z0-9_+.-]+)\/([a-zA-Z0-9_+.-]+)$/', $port) == 1 && strlen($port) < 100)
                $ports[] = $port;
          }
 
          foreach($commit['modified'] as $file)
          {
-            $port = strpos($file, '/', strpos($file, '/')+1);
-            if(preg_match('^([a-zA-Z0-9_+.-]+)/([a-zA-Z0-9_+.-]+)$', $port) === true && strlen($port) < 100)
+            $port = substr($file, 0, strpos($file, '/', strpos($file, '/')+1));
+            if(preg_match('/^([a-zA-Z0-9_+.-]+)\/([a-zA-Z0-9_+.-]+)$/', $port) == 1 && strlen($port) < 100)
                $ports[] = $port;
          }
       }
@@ -76,7 +77,26 @@ class GitHubWebhook
       );
 
       $ports = array_unique($ports);
-      $jails = $config['jails'];
+
+      $jobgroupname = sprintf('github:%s:%s', $payload['repository']['owner']['name'], $payload['repository']['name']);
+      $jobgroup = new Jobgroup($jobgroupname);
+
+      $jails = new Jails();
+
+      foreach($config['jails'] as $jail)
+      {
+         if(!$jails->exists($jail))
+            continue;
+
+         $queue = new Queue('preparequeue', $jail);
+
+         foreach($ports as $port)
+         {
+            $data['port'] = $port;
+            if($queue->createJob($data, $jobgroup) !== true)
+               return false;
+         }
+      }
 
       return true;
    }
@@ -85,9 +105,16 @@ class GitHubWebhook
    {
       $defaultconfig = Config::get('userconfig');
 
-      $file = file_get_contents("https://raw.githubusercontent.com/".$commitpath."/.redports.json");
-      if($file === false)
+      try
+      {
+         $file = file_get_contents("https://raw.githubusercontent.com/".$commitpath."/.redports.json");
+         if($file === false)
+            return $defaultconfig;
+      }
+      catch (Exception $e)
+      {
          return $defaultconfig;
+      }
 
       $config = json_decode($file, true);
 

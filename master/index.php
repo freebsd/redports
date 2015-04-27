@@ -25,8 +25,7 @@ Resque::setBackend(Config::get('datasource'));
 /* GitHub Webhooks */
 $app->post('/github/', function() use ($app) {
    $github = new GitHubWebhook();
-   $result = $github->handleEvent($app->request->headers->get('X-GitHub-Event'),
-      $app->request->post('payload'));
+   $result = $github->handleEvent($app->request->headers->get('X-GitHub-Event'));
 
    textResponse($result['code'], $result['message']);
 });
