@@ -80,6 +80,7 @@ class GitHubWebhook
 
       $jobgroupname = sprintf('github:%s:%s', $payload['repository']['owner']['name'], $payload['repository']['name']);
       $jobgroup = new Jobgroup($jobgroupname);
+      $countjobs = $jobgroup->countJobs();
 
       $jails = new Jails();
 
@@ -96,6 +97,18 @@ class GitHubWebhook
             if($queue->createJob($data, $jobgroup) !== true)
                return false;
          }
+      }
+
+      if($jobgroup->countJobs() > $countjobs)
+      {
+         $args = array(
+            'jobgroup' => $jobgroup->getJobgroupId(),
+            'repository' => $data['repository']['url'],
+            'commit' => $data['commit']['id'],
+            'created' => time()
+         );
+ 
+         Resque::enqueue('default', 'TaskPreparePortstree', $args);
       }
 
       return true;

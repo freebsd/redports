@@ -35,6 +35,11 @@ class Jobgroup
       return true;
    }
 
+   function countJobs()
+   {
+      return $this->_db->sSize('jobgroup:'.$this->getJobgroupId());
+   }
+
    function getJobs()
    {
       return $this->_db->sMembers('jobgroup:'.$this->getJobgroupId());
