@@ -8,7 +8,7 @@
  * @license    BSD License (2 Clause)
  * @link       https://decke.github.io/redports/
  */
-class TaskPreparePortstree
+class TaskNotifyEMail
 {
    protected $_db;
    protected $_headers = array(
