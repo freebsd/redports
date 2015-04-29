@@ -1,4 +1,4 @@
-#!/usr/local/bin/php
+#!/usr/bin/env php
 <?php
 
 /**
@@ -10,8 +10,7 @@
  * @link       https://decke.github.io/redports/
  */
 
-require_once '../vendor/autoload.php';
-require_once '../lib/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 if($argc != 2)
   die("Usage: ".basename($argv[0])." <machine>\n");
