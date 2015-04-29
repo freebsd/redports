@@ -1,5 +1,7 @@
 <?php
 
+namespace Redports\Master;
+
 /**
  * Queue for jobs in various jails
  *

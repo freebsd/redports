@@ -1,5 +1,7 @@
 <?php
 
+namespace Redports\Master;
+
 /**
  * Stores various settings of a client machine including
  * a token and credentials for authentication.

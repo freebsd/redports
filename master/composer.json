@@ -11,17 +11,7 @@
    },
    "autoload": {
       "psr-0": {
-         "Config": "lib",
-         "GitHubWebhook": "lib",
-         "Jails": "lib",
-         "Job": "lib",
-         "Jobgroup": "lib",
-         "Machine": "lib",
-         "Machines": "lib",
-         "Queue": "lib",
-         "Repositories": "lib",
-         "Session": "lib",
-         "Task": "lib/Task"
+         "Redports": "lib"
       },
       "files": ["lib/functions.php"]
    }

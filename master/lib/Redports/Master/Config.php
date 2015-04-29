@@ -1,5 +1,7 @@
 <?php
 
+namespace Redports\Master;
+
 /**
  * Configuration class to store various static settings
  *

@@ -1,5 +1,7 @@
 <?php
 
+namespace Redports\Master;
+
 /**
  * Class to store information about our users repositories
  *

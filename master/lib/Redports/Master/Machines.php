@@ -1,5 +1,7 @@
 <?php
 
+namespace Redports\Master;
+
 /**
  * Class to manage existing and to create new machines
  *

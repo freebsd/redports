@@ -9,7 +9,9 @@
  * @link       https://decke.github.io/redports/
  */
 
-require_once 'vendor/autoload.php';
+namespace Redports\Master;
+
+require_once __DIR__.'/vendor/autoload.php';
 
 $session = new Session();
 
@@ -17,10 +19,10 @@ $app = new \Slim\Slim();
 $app->config('debug', Config::get('debug'));
 $app->response->headers->set('Content-Type', 'text/plain');
 
-$redis = new Redis();
+$redis = new \Redis();
 $redis->pconnect(Config::get('datasource'));
 
-Resque::setBackend(Config::get('datasource'));
+\Resque::setBackend(Config::get('datasource'));
 
 /* GitHub Webhooks */
 $app->post('/github/', function() use ($app) {

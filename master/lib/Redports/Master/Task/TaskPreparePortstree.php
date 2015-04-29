@@ -1,5 +1,7 @@
 <?php
 
+namespace Redports\Master\Task;
+
 /**
  * Resque Job to prepare a Portstree overlay
  *
