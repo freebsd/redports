@@ -22,7 +22,7 @@ class ProcessManager
 
    function addJail($jailname)
    {
-      if(!isset($this->_childs[$jailname]))
+      if(isset($this->_childs[$jailname]))
          return false;
 
       $this->_childs[$jailname] = 0;
@@ -37,7 +37,20 @@ class ProcessManager
 
    function getJailname($pid)
    {
-      return array_search($this->_childs, $pid);
+      return array_search($pid, $this->_childs);
+   }
+
+   function countChilds()
+   {
+      $childs = 0;
+
+      foreach($this->_childs as $jail => $pid)
+      {
+         if($pid > 0)
+            $childs++;
+      }
+
+      return $childs;
    }
 
    function stop()
@@ -45,24 +58,42 @@ class ProcessManager
       $this->_stop = true;
    }
 
+   function sighandler($signo)
+   {
+      switch($signo)
+      {
+         case SIGTERM:
+            echo "Got SIGTERM ...\n";
+            $this->stop();
+         break;
+         case SIGHUP:
+            echo "Got SIGHUP ...\n";
+            $this->stop();
+         break;
+         case SIGINT:
+            echo "Got SIGINT ...\n";
+            $this->stop();
+         break;
+         default:
+            echo "Got unknown signal ".$signo."\n";
+      }
+   }
+
    function run()
    {
-      static $loops = 3;
+      declare(ticks = 100);
 
-      if(!$this->_stop)
+      pcntl_signal(SIGTERM, array($this, 'sighandler'));
+      pcntl_signal(SIGHUP, array($this, 'sighandler'));
+      pcntl_signal(SIGINT, array($this, 'sighandler'));
+      $this->_stop = false;
+
+      while(!$this->_stop)
       {
-         echo "checking\n";
-
          foreach($this->_childs as $jail => $pid)
          {
             if($pid != 0)
                continue;
-
-            if($loops-- < 1)
-            {
-               echo "Stopping ...\n";
-               $this->stop();
-            }
 
             $pid = pcntl_fork();
             if($pid == -1)
@@ -77,29 +108,44 @@ class ProcessManager
             {
                /* Child */
                echo "child ".getmypid()." for ".$jail." started\n";
-               sleep(rand(10, 20));
+               sleep(rand(2, 10));
                echo "child ".getmypid()." for ".$jail." ended\n";
                exit();
             }
          }
+
+         while(true)
+         {
+            $pid = pcntl_waitpid(-1, $status, WNOHANG);
+
+            if($pid === null || $pid < 1)
+               break;
+
+            $jail = $this->getJailname($pid);
+            if($jail === false)
+            {
+               echo "No jail found for pid ".$pid."\n";
+               continue;
+            }
+
+            echo "child ".$pid." for ".$jail." removed\n";
+            $this->_childs[$jail] = 0;
+         }
+
+         usleep(500000);
       }
 
-      while(true)
+      /* wait for childs to exit */
+      while($this->countChilds() > 0)
       {
-         $pid = pcntl_waitpid(-1, $status, WNOHANG);
-
-         if($pid === null || $pid == -1)
-            break;
+         echo "waiting for ".$this->countChilds()." children\n";
+         $pid = pcntl_wait($status);
 
          $jail = $this->getJailname($pid);
-         if($jail === false)
-            die('What the hell');
-
-         echo "child ".$pid." for ".$jail." removed\n";
          $this->_childs[$jail] = 0;
       }
 
-      usleep(500000);
+      return true;
    }
 }
 
