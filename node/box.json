@@ -1,0 +1,7 @@
+{
+   "directories": ["lib", "vendor"],
+   "stub": true,
+   "main": "index.php",
+   "output": "rpnode.phar"
+}
+

@@ -1,0 +1,16 @@
+{
+   "name": "redports/node",
+   "description": "A fully hosted continuous integration platform for FreeBSD ports",
+   "homepage": "https://decke.github.io/redports/",
+   "license": "BSD-2-Clause",
+   "require": {
+      "php": ">=5.4.0"
+   },
+   "autoload": {
+      "psr-0": {
+         "Config": "lib",
+         "Child": "lib",
+         "ProcessManager": "lib"
+      }
+   }
+}
