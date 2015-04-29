@@ -2,7 +2,7 @@
    "algorithm": "openssl",
    "chmod": "0755",
    "directories": ["lib", "vendor"],
-   "main": "index.php",
+   "main": "bin/rpnode",
    "output": "rpnode.phar",
    "stub": true,
    "key": "private.key"

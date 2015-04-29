@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * redports is a continuous integration platform for FreeBSD ports
+ *
+ * @author     Bernhard Froehlich <decke@bluelife.at>
+ * @copyright  2015 Bernhard Froehlich
+ * @license    BSD License (2 Clause)
+ * @link       https://decke.github.io/redports/
+ */
+
+require_once __DIR__.'/../vendor/autoload.php';
+
+use Redports\Node\Command;
+use Symfony\Component\Console\Application;
+
+$app = new Application('Redports Node', '0.1.0');
+$app->add(new Command\UpdateCommand());
+
+$maincmd = new Command\MainCommand();
+$app->add($maincmd);
+$app->setDefaultCommand($maincmd->getName());
+
+$app->run();
+

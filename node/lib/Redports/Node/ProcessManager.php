@@ -1,5 +1,7 @@
 <?php
 
+namespace Redports\Node;
+
 /**
  * Process Manager which runs one child per jailname
  * which does the real work.
