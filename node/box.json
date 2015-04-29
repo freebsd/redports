@@ -1,5 +1,6 @@
 {
    "algorithm": "openssl",
+   "chmod": "0755",
    "directories": ["lib", "vendor"],
    "main": "index.php",
    "output": "rpnode.phar",
