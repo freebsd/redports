@@ -1,7 +1,9 @@
 {
+   "algorithm": "openssl",
    "directories": ["lib", "vendor"],
    "main": "index.php",
    "output": "rpnode.phar",
-   "stub": true
+   "stub": true,
+   "key": "private.key"
 }
 
