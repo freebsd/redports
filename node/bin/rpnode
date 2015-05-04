@@ -12,8 +12,11 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+use Redports\Node\Config;
 use Redports\Node\Command;
 use Symfony\Component\Console\Application;
+
+Config::load(__DIR__.'/../rpnode.json');
 
 $app = new Application('Redports Node', '0.1.0');
 $app->add(new Command\UpdateCommand());

@@ -14,9 +14,24 @@ class Config
 {
    protected static $settings = array(
       'server' => 'https://api.redports.org/',
-      'machineid' => 'redbuild99.redports.org',
+      'machineid' => '',
       'secret' => ''
    );
+
+   public static function load($file)
+   {
+      if(!file_exists($file))
+         return false;
+
+      $content = file_get_contents($file);
+      $json = json_decode($content, true);
+      if($json == null)
+         return false;
+
+      self::$settings = $json;
+
+      return true;
+   }
 
    public static function get($property)
    {
