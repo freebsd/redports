@@ -64,6 +64,8 @@ class ConnectionManager
       curl_setopt($this->_handle, CURLOPT_CONNECTTIMEOUT, self::CONNECTTIMEOUT);
       curl_setopt($this->_handle, CURLOPT_TIMEOUT, self::TIMEOUT);
       curl_setopt($this->_handle, CURLOPT_SSL_VERIFYPEER, $this->_verifypeer);
+      curl_setopt($this->_handle, CURLOPT_COOKIEFILE, '');
+      curl_setopt($this->_handle, CURLINFO_HEADER_OUT, true);
 
       if($method == 'GET')
       {
@@ -91,6 +93,7 @@ class ConnectionManager
          'url' => curl_getinfo($this->_handle, CURLINFO_EFFECTIVE_URL),
          'http_code' => curl_getinfo($this->_handle, CURLINFO_HTTP_CODE),
          'total_time' => curl_getinfo($this->_handle, CURLINFO_TOTAL_TIME),
+         'request_header' => explode("\r\n", curl_getinfo($this->_handle, CURLINFO_HEADER_OUT)),
          'header' => explode("\r\n", substr($res, 0, curl_getinfo($this->_handle, CURLINFO_HEADER_SIZE))),
          'body' => substr($res, curl_getinfo($this->_handle, CURLINFO_HEADER_SIZE))
       );
