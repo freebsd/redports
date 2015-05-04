@@ -13,7 +13,7 @@ function isAllowed()
 {
    $app = \Slim\Slim::getInstance();
 
-   if(!Session::isAuthenticated()){
+   if(!\Redports\Master\Session::isAuthenticated()){
       $app->halt(403, 'You are not authenticated');
    }
 }
