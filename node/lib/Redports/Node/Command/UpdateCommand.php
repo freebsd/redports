@@ -2,7 +2,8 @@
 
 namespace Redports\Node\Command;
 
-use Herrera\Phar\Update\Manager;
+use Redports\Node\Config;
+use Redports\Node\UpdateManager;
 use Herrera\Phar\Update\Manifest;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateCommand extends Command
 {
-   const MANIFEST_URL = 'https://api.redports.org/manifest.json';
+   const MANIFEST_URL = 'https://api.redports.org/downloads/manifest.json';
 
    protected function configure()
    {
@@ -23,7 +24,10 @@ class UpdateCommand extends Command
 
       try
       {
-         $manager = new Manager(Manifest::loadFile(self::MANIFEST_URL));
+         $manager = new UpdateManager(Manifest::loadFile(self::MANIFEST_URL));
+
+         if (Config::get('pubkeyhash') !== false)
+            $manager->setPublicKeyHash(Config::get('pubkeyhash'));
       }
       catch (FileException $e)
       {
