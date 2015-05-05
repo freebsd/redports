@@ -18,7 +18,7 @@ use Symfony\Component\Console\Application;
 
 Config::load(__DIR__.'/../rpnode.json');
 
-$app = new Application('Redports Node', '0.1.0');
+$app = new Application('Redports Node', '@node_version@');
 $app->add(new Command\UpdateCommand());
 
 $maincmd = new Command\MainCommand();

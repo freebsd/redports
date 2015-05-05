@@ -1,10 +1,27 @@
 {
+   "alias": "rpnode.phar",
    "algorithm": "openssl",
    "chmod": "0755",
-   "directories": ["lib", "vendor"],
+   "directories": ["lib"],
    "main": "bin/rpnode",
-   "output": "rpnode.phar",
+   "output": "rpnode-0.1.1.phar",
    "stub": true,
-   "key": "private.key"
+   "key": "private.key",
+   "finder": [
+      {
+         "name": "*.php",
+         "exclude": [
+            "phpunit",
+            "phpunit-test-case",
+            "Tests",
+            "tests"
+         ],
+         "in": "vendor"
+      }
+   ],
+   "replacements": {
+      "manifest_url": "https://api.redports.org/downloads/manifest.json",
+      "node_version": "0.1.1"
+   }
 }
 

@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateCommand extends Command
 {
-   const MANIFEST_URL = 'https://api.redports.org/downloads/manifest.json';
+   const MANIFEST_URL = '@manifest_url@';
 
    protected function configure()
    {
