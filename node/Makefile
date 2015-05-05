@@ -1,13 +1,13 @@
 # redports node Makefile
 
 VERSION?=0.1.0
-DOWNLOADURL="https://decke.github.io/redports/downloads"
+DOWNLOADURL="https://api.redports.org/downloads"
 DOWNLOADDIR="downloads/"
 
 all:	build
 
 clean:
-	rm -f rpnode* *.pubkey manifest.json
+	rm -f rpnode.phar* manifest.json
 
 box.phar:
 	fetch -q -o - http://box-project.org/installer.php | php
