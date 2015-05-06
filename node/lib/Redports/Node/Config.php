@@ -13,8 +13,9 @@ namespace Redports\Node;
 class Config
 {
    protected static $settings = array(
-      'pubkeyhash' => 'ffb4fcbf9223594ec6ab97724cade73446fbdd4cb91f9bd94b74cc79e5bc4aaf',
-      'server' => 'https://api.redports.org/',
+      'manifest' => false,
+      'pubkeyhash' => false,
+      'server' => false,
       'machineid' => '',
       'secret' => ''
    );

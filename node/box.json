@@ -20,7 +20,6 @@
       }
    ],
    "replacements": {
-      "manifest_url": "https://api.redports.org/downloads/manifest.json",
       "node_version": "0.1.1"
    }
 }
