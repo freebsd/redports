@@ -1,7 +1,7 @@
 {
    "name": "redports/node",
    "description": "A fully hosted continuous integration platform for FreeBSD ports",
-   "homepage": "https://decke.github.io/redports/",
+   "homepage": "https://freebsd.github.io/redports/",
    "license": "BSD-2-Clause",
    "require": {
       "symfony/console": "~2.3",

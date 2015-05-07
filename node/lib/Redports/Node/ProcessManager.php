@@ -9,7 +9,7 @@ namespace Redports\Node;
  * @author     Bernhard Froehlich <decke@bluelife.at>
  * @copyright  2015 Bernhard Froehlich
  * @license    BSD License (2 Clause)
- * @link       https://decke.github.io/redports/
+ * @link       https://freebsd.github.io/redports/
  */
 class ProcessManager
 {
