@@ -7,7 +7,7 @@ DOWNLOADDIR="downloads/"
 all:	build
 
 clean:
-	rm -f rpnode-*.phar* manifest.json
+	rm -f redports-node-*.phar* manifest.json
 
 box.phar:
 	fetch -q -o - http://box-project.org/installer.php | php
@@ -23,15 +23,15 @@ build:	box.phar public.key
 
 release: build
 	@printf '   {\n' > manifest.json
-	@printf '      "name": "%s",\n' rpnode-$(VERSION).phar >> manifest.json
-	@printf '      "sha1": "%s",\n' `sha1 -q rpnode-$(VERSION).phar` >> manifest.json
-	@printf '      "url": "%s/rpnode-%s.phar",\n' $(DOWNLOADURL) $(VERSION) >> manifest.json
-	@printf '      "publicKey": "%s/rpnode-%s.phar.pubkey",\n' $(DOWNLOADURL) $(VERSION) >> manifest.json
+	@printf '      "name": "%s",\n' redports-node-$(VERSION).phar >> manifest.json
+	@printf '      "sha1": "%s",\n' `sha1 -q redports-node-$(VERSION).phar` >> manifest.json
+	@printf '      "url": "%s/redports-node-%s.phar",\n' $(DOWNLOADURL) $(VERSION) >> manifest.json
+	@printf '      "publicKey": "%s/redports-node-%s.phar.pubkey",\n' $(DOWNLOADURL) $(VERSION) >> manifest.json
 	@printf '      "version": "%s"\n' $(VERSION) >> manifest.json
 	@printf '   }\n' >> manifest.json
 
-	mv rpnode-$(VERSION).phar $(DOWNLOADDIR)
-	mv rpnode-$(VERSION).phar.pubkey $(DOWNLOADDIR)
+	mv redports-node-$(VERSION).phar $(DOWNLOADDIR)
+	mv redports-node-$(VERSION).phar.pubkey $(DOWNLOADDIR)
 	
 	tail -r $(DOWNLOADDIR)/manifest.json | tail +3 | tail -r > $(DOWNLOADDIR)/manifest.json.new
 	@printf '   },\n' >> $(DOWNLOADDIR)/manifest.json.new

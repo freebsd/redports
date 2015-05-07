@@ -16,7 +16,7 @@ use Redports\Node\Config;
 use Redports\Node\Command;
 use Symfony\Component\Console\Application;
 
-Config::load(__DIR__.'/../rpnode.json');
+Config::load(__DIR__.'/../redports-node.json');
 
 $app = new Application('Redports Node', '@node_version@');
 $app->add(new Command\UpdateCommand());

@@ -1,10 +1,10 @@
 {
-   "alias": "rpnode.phar",
+   "alias": "redports-node.phar",
    "algorithm": "openssl",
    "chmod": "0755",
    "directories": ["lib"],
-   "main": "bin/rpnode",
-   "output": "rpnode-0.1.1.phar",
+   "main": "bin/redports-node",
+   "output": "redports-node-0.1.1.phar",
    "stub": true,
    "key": "private.key",
    "finder": [
