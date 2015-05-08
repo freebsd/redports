@@ -8,7 +8,7 @@ use Herrera\Phar\Update\Manifest;
 
 class UpdateCommand extends Command
 {
-   function execute($options, $arguments)
+   function execute($options, $arguments, $app)
    {
       $manifest = Config::get('manifest');
 
@@ -33,7 +33,7 @@ class UpdateCommand extends Command
          return 1;
       }
 
-      if($manager->update($this->getApplication()->getVersion(), true))
+      if($manager->update($app->version, true))
          $this->writeln('Updated to latest version');
       else
          $this->writeln('Already up-to-date');

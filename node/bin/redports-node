@@ -13,9 +13,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Redports\Node\Config;
-use Redports\Node\Command\MainCommand;
-use Redports\Node\Command\SetupCommand;
-use Redports\Node\Command\UpdateCommand;
+use Redports\Node\Command\Command;
 use Cli\Helpers\DocumentedScript;
 use Cli\Helpers\Parameter;
 
@@ -27,15 +25,6 @@ $app->setName('Redports Node')
    ->setDescription('Redports node client')
    ->addParameter(new Parameter('u', 'update', Parameter::VALUE_NO_VALUE), 'Update client to latest release')
    ->addParameter(new Parameter('s', 'setup', Parameter::VALUE_NO_VALUE), 'Setup poudriere jails and portstrees')
-   ->setProgram(function ($options, $arguments) {
-      if($options['update'])
-         $cmd = new UpdateCommand();
-      else if($options['setup'])
-         $cmd = new SetupCommand();
-      else
-         $cmd = new MainCommand();
-       
-      $cmd->execute($options, $arguments);
-   })
+   ->setProgram(array(new Command(), 'execute'))
    ->start();
 
