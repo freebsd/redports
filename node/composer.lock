@@ -4,8 +4,56 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "333629605b64e4941ed48ae6aab9cc2c",
+    "hash": "6b44ff8b8ea4dd51cfa45f92a20deb49",
     "packages": [
+        {
+            "name": "amercier/cli-helpers",
+            "version": "v1.4.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amercier/php-cli-helpers.git",
+                "reference": "78c77c30d41a0cd45a5be3289e90d688430cb28f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amercier/php-cli-helpers/zipball/78c77c30d41a0cd45a5be3289e90d688430cb28f",
+                "reference": "78c77c30d41a0cd45a5be3289e90d688430cb28f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "pear-pear.php.net/php_codesniffer": ">=1.4.5",
+                "phpunit/phpunit": "4.*",
+                "satooshi/php-coveralls": ">=0.6.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Cli": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "src/"
+            ],
+            "license": [
+                "MIT"
+            ],
+            "description": "Utility classes to write PHP command-line scripts",
+            "homepage": "https://github.com/amercier/php-cli-helpers",
+            "keywords": [
+                "cli",
+                "command",
+                "command-line",
+                "helpers",
+                "line",
+                "utilities",
+                "utility"
+            ],
+            "time": "2014-09-18 17:37:41"
+        },
         {
             "name": "herrera-io/json",
             "version": "1.0.3",
@@ -279,64 +327,6 @@
                 "validator"
             ],
             "time": "2015-01-04 21:18:15"
-        },
-        {
-            "name": "symfony/console",
-            "version": "v2.6.6",
-            "target-dir": "Symfony/Component/Console",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Console.git",
-                "reference": "5b91dc4ed5eb08553f57f6df04c4730a73992667"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/5b91dc4ed5eb08553f57f6df04c4730a73992667",
-                "reference": "5b91dc4ed5eb08553f57f6df04c4730a73992667",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "psr/log": "~1.0",
-                "symfony/event-dispatcher": "~2.1",
-                "symfony/phpunit-bridge": "~2.7",
-                "symfony/process": "~2.1"
-            },
-            "suggest": {
-                "psr/log": "For using the console logger",
-                "symfony/event-dispatcher": "",
-                "symfony/process": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.6-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Console\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Symfony Console Component",
-            "homepage": "http://symfony.com",
-            "time": "2015-03-30 15:54:10"
         }
     ],
     "packages-dev": [],

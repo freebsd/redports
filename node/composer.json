@@ -4,7 +4,7 @@
    "homepage": "https://freebsd.github.io/redports/",
    "license": "BSD-2-Clause",
    "require": {
-      "symfony/console": "~2.3",
+      "amercier/cli-helpers": "1.*",
       "herrera-io/phar-update": "~1.0",
       "php": ">=5.4.0"
    },

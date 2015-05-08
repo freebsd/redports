@@ -110,6 +110,10 @@ class ProcessManager
             {
                /* Child */
                echo "child ".getmypid()." for ".$jail." started\n";
+               $client = new APIClient();
+               var_dump($client->login());
+               var_dump($client->listJails());
+
                sleep(rand(2, 10));
                echo "child ".getmypid()." for ".$jail." ended\n";
                exit();

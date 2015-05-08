@@ -5,28 +5,20 @@ namespace Redports\Node\Command;
 use Redports\Node\Config;
 use Redports\Node\UpdateManager;
 use Herrera\Phar\Update\Manifest;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateCommand extends Command
 {
-   protected function configure()
-   {
-      $this->setName('update')->setDescription('Updates the application to the latest version');
-   }
-
-   protected function execute(InputInterface $input, OutputInterface $output)
+   function execute($options, $arguments)
    {
       $manifest = Config::get('manifest');
 
       if($manifest === false)
       {
-         $output->writeln('<error>Manifest URL not defined</error>');
+         $this->writeln('Manifest URL not defined');
          return 1;
       }
 
-      $output->writeln('Checking for updates ...');
+      $this->writeln('Checking for updates ...');
 
       try
       {
@@ -37,14 +29,14 @@ class UpdateCommand extends Command
       }
       catch (FileException $e)
       {
-         $output->writeln('<error>Unable to search for updates</error>');
+         $this->writeln('Unable to search for updates');
          return 1;
       }
 
       if($manager->update($this->getApplication()->getVersion(), true))
-         $output->writeln('<info>Updated to latest version</info>');
+         $this->writeln('Updated to latest version');
       else
-         $output->writeln('<comment>Already up-to-date</comment>');
+         $this->writeln('Already up-to-date');
 
       return 0;
    }

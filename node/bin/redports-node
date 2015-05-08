@@ -13,17 +13,29 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Redports\Node\Config;
-use Redports\Node\Command;
-use Symfony\Component\Console\Application;
+use Redports\Node\Command\MainCommand;
+use Redports\Node\Command\SetupCommand;
+use Redports\Node\Command\UpdateCommand;
+use Cli\Helpers\DocumentedScript;
+use Cli\Helpers\Parameter;
 
 Config::load(__DIR__.'/../redports-node.json');
 
-$app = new Application('Redports Node', '@node_version@');
-$app->add(new Command\UpdateCommand());
-
-$maincmd = new Command\MainCommand();
-$app->add($maincmd);
-$app->setDefaultCommand($maincmd->getName());
-
-$app->run();
+$app = new DocumentedScript();
+$app->setName('Redports Node')
+   ->setVersion('@node_version@')
+   ->setDescription('Redports node client')
+   ->addParameter(new Parameter('u', 'update', Parameter::VALUE_NO_VALUE), 'Update client to latest release')
+   ->addParameter(new Parameter('s', 'setup', Parameter::VALUE_NO_VALUE), 'Setup poudriere jails and portstrees')
+   ->setProgram(function ($options, $arguments) {
+      if($options['update'])
+         $cmd = new UpdateCommand();
+      else if($options['setup'])
+         $cmd = new SetupCommand();
+      else
+         $cmd = new MainCommand();
+       
+      $cmd->execute($options, $arguments);
+   })
+   ->start();
 
