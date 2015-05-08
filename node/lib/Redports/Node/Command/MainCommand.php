@@ -3,14 +3,17 @@
 namespace Redports\Node\Command;
 
 use Redports\Node\ProcessManager;
+use Redports\Node\Poudriere\Poudriere;
 
 class MainCommand extends Command
 {
    function execute($options, $arguments)
    {
       $pm = new ProcessManager();
-      $pm->addJail('JAIL1');
-      $pm->addJail('JAIL2');
+      $poudriere = new Poudriere();
+
+      foreach($poudriere->getAllJails() as $jail)
+         $pm->addJail($jail->getJailname());
 
       $pm->run();
    }

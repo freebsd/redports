@@ -15,11 +15,14 @@ class ProcessManager
 {
    protected $_stop = false;
    protected $_childs = array();
+   protected $_client;
 
    function __construct()
    {
       if(!function_exists('pcntl_fork'))
          die('pcntl extension not loaded!');
+
+      $this->_client = new APIClient();
    }
 
    function addJail($jailname)
@@ -83,6 +86,9 @@ class ProcessManager
 
    function run()
    {
+      if(!$this->_client->login())
+         return false;
+
       declare(ticks = 100);
 
       pcntl_signal(SIGTERM, array($this, 'sighandler'));
@@ -109,13 +115,8 @@ class ProcessManager
             else
             {
                /* Child */
-               echo "child ".getmypid()." for ".$jail." started\n";
-               $client = new APIClient();
-               var_dump($client->login());
-               var_dump($client->listJails());
-
-               sleep(rand(2, 10));
-               echo "child ".getmypid()." for ".$jail." ended\n";
+               $child = new Child($this->_client, $jail);
+               $child->run();
                exit();
             }
          }

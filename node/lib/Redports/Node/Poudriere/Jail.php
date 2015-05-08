@@ -12,7 +12,7 @@ namespace Redports\Node\Poudriere;
  */
 class Jail
 {
-   const $binpath = '/usr/local/bin/poudriere';
+   protected $binpath = '/usr/local/bin/poudriere';
 
    protected $_jailname;
    protected $_version;

@@ -12,7 +12,7 @@ namespace Redports\Node\Poudriere;
  */
 class Portstree
 {
-   const $binpath = '/usr/local/bin/poudriere';
+   protected $binpath = '/usr/local/bin/poudriere';
 
    protected $_portstreename;
    protected $_method;

@@ -13,10 +13,12 @@ namespace Redports\Node\Poudriere;
  */
 class Poudriere
 {
-   const $binpath = '/usr/local/bin/poudriere';
+   protected $binpath = '/usr/local/bin/poudriere';
 
    public function __construct()
    {
+      if(!file_exists($this->binpath))
+         die($this->binpath.' does not exist!');
    }
 
    public function getAllJails()
