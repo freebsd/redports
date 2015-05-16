@@ -16,11 +16,14 @@ class ProcessManager
    protected $_stop = false;
    protected $_childs = array();
    protected $_client;
+   protected $_log;
 
    function __construct()
    {
+      $this->_log = Config::getLogger();
+
       if(!function_exists('pcntl_fork'))
-         die('pcntl extension not loaded!');
+         $this->_log->critical('pcntl extension not loaded!');
 
       $this->_client = new APIClient();
    }
@@ -68,19 +71,19 @@ class ProcessManager
       switch($signo)
       {
          case SIGTERM:
-            echo "Got SIGTERM ...\n";
+            $this->_log->notice('Got SIGTERM ...');
             $this->stop();
          break;
          case SIGHUP:
-            echo "Got SIGHUP ...\n";
+            $this->_log->notice('Got SIGHUP ...');
             $this->stop();
          break;
          case SIGINT:
-            echo "Got SIGINT ...\n";
+            $this->_log->notice('Got SIGINT ...');
             $this->stop();
          break;
          default:
-            echo "Got unknown signal ".$signo."\n";
+            $this->_log->warning('Got unknown signal '.$signo);
       }
    }
 
@@ -131,11 +134,11 @@ class ProcessManager
             $jail = $this->getJailname($pid);
             if($jail === false)
             {
-               echo "No jail found for pid ".$pid."\n";
+               $this->_log->error('No jail found for pid '.$pid);
                continue;
             }
 
-            echo "child ".$pid." for ".$jail." removed\n";
+            $this->_log->info('child '.$pid.' for '.$jail.' removed');
             $this->_childs[$jail] = 0;
          }
 
@@ -145,7 +148,7 @@ class ProcessManager
       /* wait for childs to exit */
       while($this->countChilds() > 0)
       {
-         echo "waiting for ".$this->countChilds()." children\n";
+         $this->_log->info('waiting for '.$this->countChilds().' children');
          $pid = pcntl_wait($status);
 
          $jail = $this->getJailname($pid);

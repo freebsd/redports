@@ -17,8 +17,12 @@ class Config
       'pubkeyhash' => false,
       'server' => false,
       'machineid' => '',
-      'secret' => ''
+      'secret' => '',
+      'logfile' => '/var/log/redports-node.log',
+      'loglevel' => 'notice'
    );
+
+   protected static $logger = null;
 
    public static function load($file)
    {
@@ -41,6 +45,25 @@ class Config
          return self::$settings[$property];
 
       return false;
+   }
+
+   public static function getLogger()
+   {
+
+      if(self::$logger == null)
+      {
+         $file = new \Apix\Log\Logger\File(self::get('logfile'));
+         $file->setMinLevel(self::get('loglevel'));
+
+         $stdout = new \Apix\Log\Logger\File('php://stdout')
+         $stdout->setMinLevel(self::get('loglevel'));
+
+         self::$logger = new \Apix\Log\Logger();
+         self::$logger->add($file);
+         self::$logger->add($stdout);
+      }
+
+      return self::$logger;
    }
 }
 
