@@ -55,7 +55,7 @@ class Config
          $file = new \Apix\Log\Logger\File(self::get('logfile'));
          $file->setMinLevel(self::get('loglevel'));
 
-         $stdout = new \Apix\Log\Logger\File('php://stdout')
+         $stdout = new \Redports\Node\Logger\Stdout();
          $stdout->setMinLevel(self::get('loglevel'));
 
          self::$logger = new \Apix\Log\Logger();
