@@ -34,7 +34,7 @@ class Config
       if($json == null)
          return false;
 
-      self::$settings = $json;
+      self::$settings = array_merge(self::$settings, $json);
 
       return true;
    }
