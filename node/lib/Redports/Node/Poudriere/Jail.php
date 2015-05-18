@@ -21,6 +21,7 @@ class Jail
    protected $_path;
    protected $_fs;
    protected $_updated;
+   protected $_queue;
 
    public function __construct($jailname)
    {
@@ -30,6 +31,9 @@ class Jail
    protected function _load($jailname)
    {
       exec(sprintf("%s jail -i -j %s", $this->binpath, $jailname), $output);
+
+      if(count($output) < 1)
+         return false;
 
       foreach($output as $line)
       {
@@ -65,6 +69,17 @@ class Jail
          }
       }
 
+      exec(sprintf("zfs get -o value redports:queue %s", $this->_fs), $output2);
+
+      if(trim($output2[1]) != '-')
+         $this->_queue = trim($output2[1]);
+
+      return true;
+   }
+
+   function setQueue($queue)
+   {
+      exec(sprintf("zfs set redports:queue=%s %s", $this->_fs, $queue));
       return true;
    }
 
@@ -101,6 +116,11 @@ class Jail
    function getUpdated()
    {
       return $this->_updated;
+   }
+
+   function getQueue()
+   {
+      return $this->_queue;
    }
 }
 
