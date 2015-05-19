@@ -19,7 +19,7 @@ class Config
       'machineid' => '',
       'secret' => '',
       'logfile' => '/var/log/redports-node.log',
-      'loglevel' => 'notice'
+      'loglevel' => 'info'
    );
 
    protected static $logger = null;

@@ -14,16 +14,18 @@ class Child
 {
    protected $_client;
    protected $_jailname;
+   protected $_log;
 
    function __construct($client, $jailname)
    {
       $this->_client = $client;
       $this->_jailname = $jailname;
+      $this->_log = Config::getLogger();
    }
 
    function run()
    {
-      echo "polling for job on ".$this->_jailname."\n";
+      $this->_log->info('polling for job on '.$this->_jailname);
 
       /* TODO: add business logic to poll for jobs and perform them */
 

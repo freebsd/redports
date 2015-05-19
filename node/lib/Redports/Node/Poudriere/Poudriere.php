@@ -18,7 +18,7 @@ class Poudriere
    public function __construct()
    {
       if(!file_exists($this->binpath))
-         die($this->binpath.' does not exist!');
+         trigger_error('Poudriere binary '.$this->binpath.' does not exist!', E_USER_ERROR);
    }
 
    public function getAllJails()

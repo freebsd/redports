@@ -20,11 +20,10 @@ class ProcessManager
 
    function __construct()
    {
-      $this->_log = Config::getLogger();
-
       if(!function_exists('pcntl_fork'))
-         $this->_log->critical('pcntl extension not loaded!');
+         trigger_error('pcntl extension not loaded!', E_USER_ERROR);
 
+      $this->_log = Config::getLogger();
       $this->_client = new APIClient();
    }
 
@@ -108,7 +107,7 @@ class ProcessManager
 
             $pid = pcntl_fork();
             if($pid == -1)
-               die('Forking failed!!');
+               trigger_error('Forking failed!!', E_USER_ERROR);
 
             if($pid)
             {

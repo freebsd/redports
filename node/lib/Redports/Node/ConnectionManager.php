@@ -24,7 +24,7 @@ class ConnectionManager
    function __construct($server)
    {
       if(!function_exists('curl_init'))
-         die('curl extension not loaded!');
+         trigger_error('curl extension not loaded!', E_USER_ERROR);
 
       $this->_handle = curl_init();
       $this->_setServer($server);
