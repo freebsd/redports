@@ -13,19 +13,19 @@ namespace Redports\Node;
 class Child
 {
    protected $_client;
-   protected $_jailname;
+   protected $_jail;
    protected $_log;
 
-   function __construct($client, $jailname)
+   function __construct($client, $jail)
    {
       $this->_client = $client;
-      $this->_jailname = $jailname;
+      $this->_jail = $jail;
       $this->_log = Config::getLogger();
    }
 
    function run()
    {
-      $this->_log->info('polling for job on '.$this->_jailname);
+      $this->_log->info('polling for job on '.$this->_jail->getJailname());
 
       /* TODO: add business logic to poll for jobs and perform them */
 

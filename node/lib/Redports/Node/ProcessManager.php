@@ -15,6 +15,7 @@ class ProcessManager
 {
    protected $_stop = false;
    protected $_childs = array();
+   protected $_jails = array();
    protected $_client;
    protected $_log;
 
@@ -27,12 +28,18 @@ class ProcessManager
       $this->_client = new APIClient();
    }
 
-   function addJail($jailname)
+   function addJail($jail)
    {
+      $jailname = $jail->getJailname();
+
+      if(isset($this->_jails[$jailname]))
+         return false;
+
       if(isset($this->_childs[$jailname]))
          return false;
 
       $this->_childs[$jailname] = 0;
+      $this->_jails[$jailname] = $jail;
       return true;
    }
 
@@ -100,7 +107,7 @@ class ProcessManager
 
       while(!$this->_stop)
       {
-         foreach($this->_childs as $jail => $pid)
+         foreach($this->_childs as $jailname => $pid)
          {
             if($pid != 0)
                continue;
@@ -112,12 +119,12 @@ class ProcessManager
             if($pid)
             {
                /* Parent */
-               $this->_childs[$jail] = $pid;
+               $this->_childs[$jailname] = $pid;
             }
             else
             {
                /* Child */
-               $child = new Child($this->_client, $jail);
+               $child = new Child($this->_client, $this->_jails[$jailname]);
                $child->run();
                exit();
             }
@@ -130,15 +137,15 @@ class ProcessManager
             if($pid === null || $pid < 1)
                break;
 
-            $jail = $this->getJailname($pid);
-            if($jail === false)
+            $jailname = $this->getJailname($pid);
+            if($jailname === false)
             {
                $this->_log->error('No jail found for pid '.$pid);
                continue;
             }
 
-            $this->_log->info('child '.$pid.' for '.$jail.' removed');
-            $this->_childs[$jail] = 0;
+            $this->_log->info('child '.$pid.' for '.$jailname.' removed');
+            $this->_childs[$jailname] = 0;
          }
 
          usleep(500000);
@@ -150,8 +157,8 @@ class ProcessManager
          $this->_log->info('waiting for '.$this->countChilds().' children');
          $pid = pcntl_wait($status);
 
-         $jail = $this->getJailname($pid);
-         $this->_childs[$jail] = 0;
+         $jailname = $this->getJailname($pid);
+         $this->_childs[$jailname] = 0;
       }
 
       return true;

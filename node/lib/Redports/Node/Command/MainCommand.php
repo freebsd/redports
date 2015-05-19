@@ -21,7 +21,7 @@ class MainCommand extends Command
          else
          {
             $logger->info('Adding Jail '.$jail->getJailname().' to Queue '.$jail->getQueue());
-            $pm->addJail($jail->getJailname());
+            $pm->addJail($jail);
          }
       }
 
