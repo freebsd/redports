@@ -2,6 +2,8 @@
 
 namespace Redports\Node;
 
+use Redports\Node\Client\Client;
+
 /**
  * Process Manager which runs one child per jailname
  * which does the real work.
@@ -25,7 +27,7 @@ class ProcessManager
          trigger_error('pcntl extension not loaded!', E_USER_ERROR);
 
       $this->_log = Config::getLogger();
-      $this->_client = new APIClient();
+      $this->_client = new Client();
    }
 
    function addJail($jail)

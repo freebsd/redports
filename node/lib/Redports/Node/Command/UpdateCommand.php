@@ -3,7 +3,7 @@
 namespace Redports\Node\Command;
 
 use Redports\Node\Config;
-use Redports\Node\UpdateManager;
+use Redports\Node\Update\UpdateManager;
 use Herrera\Phar\Update\Manifest;
 
 class UpdateCommand extends Command

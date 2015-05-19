@@ -1,6 +1,6 @@
 <?php
 
-namespace Redports\Node;
+namespace Redports\Node\Update;
 
 use Herrera\Phar\Update\Manager;
 use Herrera\Phar\Update\Manifest;

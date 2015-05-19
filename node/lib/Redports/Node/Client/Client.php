@@ -1,6 +1,8 @@
 <?php
 
-namespace Redports\Node;
+namespace Redports\Node\Client;
+
+use Redports\Node\Config;
 
 /**
  * REST API client for Redports web api
@@ -10,7 +12,7 @@ namespace Redports\Node;
  * @license    BSD License (2 Clause)
  * @link       https://freebsd.github.io/redports/
  */
-class APIClient
+class Client
 {
    protected $_conn = null;
 

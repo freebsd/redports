@@ -1,6 +1,6 @@
 <?php
 
-namespace Redports\Node;
+namespace Redports\Node\Client;
 
 /**
  * CURL based Connection Manager which is able to send
