@@ -30,9 +30,9 @@ class Jail
 
    protected function _load($jailname)
    {
-      exec(sprintf("%s jail -i -j %s", $this->binpath, $jailname), $output);
+      exec(sprintf("%s jail -i -j %s", $this->binpath, $jailname), $output, $retval);
 
-      if(count($output) < 1)
+      if($retval != 0 || count($output) < 1)
          return false;
 
       foreach($output as $line)
@@ -69,17 +69,35 @@ class Jail
          }
       }
 
-      exec(sprintf("zfs get -o value redports:queue %s", $this->_fs), $output2);
+      unset($output);
+      exec(sprintf("zfs get -o value redports:queue %s", $this->_fs), $output, $retval);
 
-      if(trim($output2[1]) != '-')
-         $this->_queue = trim($output2[1]);
+      if($retval == 0 && count($output) == 2)
+      {
+         $value = trim($output[1]);
+
+         if($value != '-' && $value != 'none')
+            $this->_queue = $value;
+      }
 
       return true;
    }
 
    function setQueue($queue)
    {
-      exec(sprintf("zfs set redports:queue=%s %s", $this->_fs, $queue));
+      if(!$this->_fs)
+         return false;
+
+      exec(sprintf("zfs set redports:queue=%s %s", $queue, $this->_fs));
+      return true;
+   }
+
+   function unsetQueue()
+   {
+      if(!$this->_fs)
+         return false;
+
+      exec(sprintf("zfs inherit -Sr redports:queue %s", $this->_fs));
       return true;
    }
 
