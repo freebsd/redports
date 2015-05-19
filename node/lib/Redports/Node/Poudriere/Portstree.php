@@ -26,7 +26,10 @@ class Portstree
 
    protected function _load($name)
    {
-      exec(sprintf("%s ports -l -q", $this->binpath), $output);
+      exec(sprintf("%s ports -l -q", $this->binpath), $output, $result);
+
+      if($result != 0)
+         return false;
   
       foreach($output as $line)
       {
@@ -36,7 +39,7 @@ class Portstree
             continue;
  
          $this->_portstreename = $parts[0];
-         $this->_method $parts[1];
+         $this->_method = $parts[1];
          $this->_updated = $parts[2].' '.$parts[3];
          $this->_path = $parts[4];
 
@@ -44,6 +47,12 @@ class Portstree
       }
 
       return false;
+   }
+
+   function update()
+   {
+      exec(sprintf("%s ports -u -p %s", $this->binpath, $this->portstreename));
+      return true;
    }
 
    function getPortstreename()
@@ -61,9 +70,11 @@ class Portstree
       return $this->_path;
    }
 
-   function getUpdated()
+   function getUpdated($raw = false)
    {
-      return $this->_updated;
+      if($raw)
+         return $this->_updated;
+      return strtotime($this->_updated);
    }
 }
 

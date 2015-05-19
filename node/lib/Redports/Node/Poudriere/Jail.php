@@ -140,5 +140,10 @@ class Jail
    {
       return $this->_queue;
    }
+
+   function getPortstree()
+   {
+      return new Portstree($this->_jailname);
+   }
 }
 
