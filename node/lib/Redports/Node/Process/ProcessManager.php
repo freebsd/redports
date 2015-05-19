@@ -1,7 +1,8 @@
 <?php
 
-namespace Redports\Node;
+namespace Redports\Node\Process;
 
+use Redports\Node\Config;
 use Redports\Node\Client\Client;
 
 /**

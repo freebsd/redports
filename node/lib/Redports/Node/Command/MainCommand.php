@@ -3,7 +3,7 @@
 namespace Redports\Node\Command;
 
 use Redports\Node\Config;
-use Redports\Node\ProcessManager;
+use Redports\Node\Process\ProcessManager;
 use Redports\Node\Poudriere\Poudriere;
 
 class MainCommand extends Command

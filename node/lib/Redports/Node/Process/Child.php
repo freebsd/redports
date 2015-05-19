@@ -1,6 +1,8 @@
 <?php
 
-namespace Redports\Node;
+namespace Redports\Node\Process;
+
+use Redports\Node\Config;
 
 /**
  * Child to perform builds for one Poudriere Jail
