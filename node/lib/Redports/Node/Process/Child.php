@@ -43,6 +43,11 @@ class Child
    {
       $res = $this->_client->takeJob('waitqueue', $this->_jail->getQueue());
 
+      if($res['http_code'] == 204){
+         $this->_log->info('No job in queue');
+         return false;
+      }
+
       if($res['http_code'] != 200){
          $this->_log->error('Got invalid response from server', $res);
          return false;
