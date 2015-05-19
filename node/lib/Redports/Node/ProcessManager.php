@@ -126,6 +126,10 @@ class ProcessManager
                /* Child */
                $child = new Child($this->_client, $this->_jails[$jailname]);
                $child->run();
+
+               /* delay to avoid fast respawning */
+               sleep(2);
+
                exit();
             }
          }

@@ -27,11 +27,16 @@ class Child
    {
       $this->_log->info('polling for job on '.$this->_jail->getJailname());
 
+      $res = $this->_client->takeJob('waitqueue', $this->_jail->getQueue());
+
+      if($res['http_code'] != 200){
+         $this->_log->error('Got invalid response from server', $res);
+         return false;
+      }
+
       /* TODO: add business logic to poll for jobs and perform them */
 
-      sleep(1);
-
-      return false;
+      return true;
    }
 }
 
