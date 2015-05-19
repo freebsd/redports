@@ -19,7 +19,6 @@ redports-node port:
 node:
 - poudriere integration
 - business logic for building and talking to master
-- setup command to create new poudriere jails
 
 master:
 - commit comments on github after end of build
