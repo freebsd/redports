@@ -19,10 +19,9 @@ RUN_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:${PORTSDIR}/security/ca_ro
 NO_BUILD=	yes
 USE_PHP=	curl hash json openssl pcntl phar
 DEFAULT_VERSIONS=	php=56
+USE_RC_SUBR=	redportsnode
 
-PLIST_FILES=	bin/redports-node \
-		bin/redports-node.phar \
-		bin/redports-node.phar.pubkey
+SUB_FILES=	redports-node.json.sample
 
 do-extract:
 	${MKDIR} ${WRKSRC}/
@@ -33,5 +32,6 @@ do-install:
 	${INSTALL_SCRIPT} ${WRKSRC}/redports-node.phar ${STAGEDIR}${PREFIX}/bin/
 	${LN} -s redports-node.phar ${STAGEDIR}${PREFIX}/bin/redports-node
 	${INSTALL_DATA} ${WRKSRC}/redports-node.phar.pubkey ${STAGEDIR}${PREFIX}/bin/
+	${INSTALL_DATA} ${WRKDIR}/${PORTNAME}.json.sample ${STAGEDIR}${PREFIX}/etc/
 
 .include <bsd.port.mk>
