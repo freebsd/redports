@@ -3,7 +3,8 @@
 # $FreeBSD$
 #
 # PROVIDE: redportsnode
-# REQUIRE: LOGIN
+# REQUIRE: DAEMON
+# BEFORE:  LOGIN
 # KEYWORD: shutdown
 #
 # Add the following line to /etc/rc.conf[.local] to enable redportsnode
