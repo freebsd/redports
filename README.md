@@ -12,9 +12,6 @@ Want to help? IRC #redports (freenode)
 This are the major TODO items before we can do a first
 2.0.0 release.
 
-redports-node port:
-- needs rc script
-
 node:
 - poudriere integration
 - business logic for building and talking to master
