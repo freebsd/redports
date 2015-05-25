@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "72c5d7ff6b014e3a9f65dbd35016dad3",
+    "hash": "7278f535ccf7398e983ca47be50b96f5",
     "packages": [
         {
             "name": "chrisboulton/php-resque",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/chrisboulton/php-resque.git",
-                "reference": "eb7ab0c81ada61f11f27d3069d48d7bb82ee4670"
+                "reference": "df69e8980cc21652f10cd775cb6a0e8c572ffd2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chrisboulton/php-resque/zipball/eb7ab0c81ada61f11f27d3069d48d7bb82ee4670",
-                "reference": "eb7ab0c81ada61f11f27d3069d48d7bb82ee4670",
+                "url": "https://api.github.com/repos/chrisboulton/php-resque/zipball/df69e8980cc21652f10cd775cb6a0e8c572ffd2d",
+                "reference": "df69e8980cc21652f10cd775cb6a0e8c572ffd2d",
                 "shasum": ""
             },
             "require": {
@@ -60,7 +60,7 @@
                 "redis",
                 "resque"
             ],
-            "time": "2015-03-12 11:06:59"
+            "time": "2015-05-13 11:58:23"
         },
         {
             "name": "colinmollenhour/credis",
@@ -198,16 +198,16 @@
         },
         {
             "name": "knplabs/github-api",
-            "version": "1.4.7",
+            "version": "1.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "d2729cf6b9d5b6fa340b1ff001dd89e319741baa"
+                "reference": "b53ff0c7eef5063818aac3ea6a3c4f0598bf16be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/d2729cf6b9d5b6fa340b1ff001dd89e319741baa",
-                "reference": "d2729cf6b9d5b6fa340b1ff001dd89e319741baa",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/b53ff0c7eef5063818aac3ea6a3c4f0598bf16be",
+                "reference": "b53ff0c7eef5063818aac3ea6a3c4f0598bf16be",
                 "shasum": ""
             },
             "require": {
@@ -255,7 +255,7 @@
                 "gist",
                 "github"
             ],
-            "time": "2015-04-07 20:24:33"
+            "time": "2015-05-05 08:43:01"
         },
         {
             "name": "psr/log",
@@ -343,17 +343,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.6.6",
+            "version": "v2.6.7",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "70f7c8478739ad21e3deef0d977b38c77f1fb284"
+                "reference": "672593bc4b0043a0acf91903bb75a1c82d8f2e02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/70f7c8478739ad21e3deef0d977b38c77f1fb284",
-                "reference": "70f7c8478739ad21e3deef0d977b38c77f1fb284",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/672593bc4b0043a0acf91903bb75a1c82d8f2e02",
+                "reference": "672593bc4b0043a0acf91903bb75a1c82d8f2e02",
                 "shasum": ""
             },
             "require": {
@@ -388,17 +388,17 @@
             ],
             "authors": [
                 {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
                     "name": "Fabien Potencier",
                     "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony EventDispatcher Component",
-            "homepage": "http://symfony.com",
-            "time": "2015-03-13 17:37:22"
+            "homepage": "https://symfony.com",
+            "time": "2015-05-02 15:18:45"
         }
     ],
     "packages-dev": [],
