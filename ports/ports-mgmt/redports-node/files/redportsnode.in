@@ -17,6 +17,7 @@ name=redportsnode
 rcvar=redportsnode_enable
 
 command="%%LOCALBASE%%/bin/redports-node"
+command_interpreter="php"
 pidfile="/var/run/${name}.pid"
 
 start_cmd="${name}_start"
