@@ -110,7 +110,7 @@ class GitHubWebhook
             'created' => time()
          );
  
-         Resque::enqueue('default', 'TaskPreparePortstree', $args);
+         \Resque::enqueue('default', 'TaskPreparePortstree', $args);
       }
 
       return true;
@@ -122,7 +122,7 @@ class GitHubWebhook
 
       try
       {
-         $file = file_get_contents("https://raw.githubusercontent.com/".$commitpath."/.redports.json");
+         $file = @file_get_contents("https://raw.githubusercontent.com/".$commitpath."/.redports.json");
          if($file === false)
             return $defaultconfig;
       }
