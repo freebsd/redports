@@ -56,16 +56,16 @@
         },
         {
             "name": "apix/log",
-            "version": "1.0.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/frqnck/apix-log.git",
-                "reference": "c99f00a8ba1abf56e01f8850154db1f012d420e8"
+                "reference": "e48bae2fb139fe3cfe3987600a61e582ec7c9d11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/frqnck/apix-log/zipball/c99f00a8ba1abf56e01f8850154db1f012d420e8",
-                "reference": "c99f00a8ba1abf56e01f8850154db1f012d420e8",
+                "url": "https://api.github.com/repos/frqnck/apix-log/zipball/e48bae2fb139fe3cfe3987600a61e582ec7c9d11",
+                "reference": "e48bae2fb139fe3cfe3987600a61e582ec7c9d11",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
                     "email": "franck@ouarz.net"
                 }
             ],
-            "description": "Minimalist thin (and fast) PSR-3 compliant logger. Convenient in keeping PHAR bundle light.",
+            "description": "Minimalist, thin and fast PSR-3 compliant (multi-bucket) logger.",
             "homepage": "https://github.com/frqnck/apix-log",
             "keywords": [
                 "apix",
@@ -104,7 +104,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2014-09-29 23:07:40"
+            "time": "2015-06-10 18:31:13"
         },
         {
             "name": "herrera-io/json",
@@ -227,20 +227,20 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "1.4.1",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/justinrainbow/json-schema.git",
-                "reference": "2465fe486c864e30badaa4d005ebdf89dbc503f3"
+                "reference": "7dfe4f1db8a62be3dd35710efce663537d515653"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/2465fe486c864e30badaa4d005ebdf89dbc503f3",
-                "reference": "2465fe486c864e30badaa4d005ebdf89dbc503f3",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/7dfe4f1db8a62be3dd35710efce663537d515653",
+                "reference": "7dfe4f1db8a62be3dd35710efce663537d515653",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=5.3.2"
             },
             "require-dev": {
                 "json-schema/json-schema-test-suite": "1.1.0",
@@ -289,7 +289,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2015-03-27 16:41:39"
+            "time": "2015-06-14 20:01:28"
         },
         {
             "name": "kherge/version",
