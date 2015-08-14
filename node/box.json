@@ -9,7 +9,7 @@
    "key": "private.key",
    "finder": [
       {
-         "name": "*.php",
+         "name": [ "*.php", "*.json"],
          "exclude": [
             "phpunit",
             "phpunit-test-case",
