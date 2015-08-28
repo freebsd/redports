@@ -17,7 +17,7 @@ use Redports\Node\Command\Command;
 use Cli\Helpers\DocumentedScript;
 use Cli\Helpers\Parameter;
 
-Config::load(__DIR__.'/../redports-node.json');
+Config::loadFirst(array('/usr/local/etc/redports-node.json'));
 
 $app = new DocumentedScript();
 $app->setName('Redports Node')

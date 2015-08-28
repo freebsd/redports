@@ -24,6 +24,17 @@ class Config
 
    protected static $logger = null;
 
+   public static function loadFirst($files)
+   {
+      foreach($files as $file)
+      {
+         if(Config::load($file) === true)
+            return true;
+      }
+
+      return false;
+   }
+
    public static function load($file)
    {
       if(!file_exists($file))
