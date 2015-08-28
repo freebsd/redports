@@ -48,10 +48,34 @@ class TaskPreparePortstree
       return true;
    }
 
+   protected function setArchiveForJobgroup($jobgroupid, $uri)
+   {
+      $jobgroup = new Jobgroup($jobgroupid);
+
+      foreach($jobgroup->getJobs() as $jobid)
+      {
+         $job = new Job($jobid);
+         if($job->set('portsoverlay', $uri) !== true)
+            return false;
+
+         if($job->moveToQueue('waitqueue') !== true)
+            return false;
+      }
+
+      return true;
+   }
+
    public function perform()
    {
+      $targetdir = Config::get('logdir').'/'.$this->args['jobgroup'].'/';
+      $targeturi = sprintf('%s/%s/portstree-%s.tar.xz', basename(Config::get('logdir')), $this->args['jobgroup'], $this->args['commit']);
+      $targetfile = sprintf('%s/%s', $targetdir, basename($targeturi));
+
       $tmpdir = $this->tempdir("php-");
       $tmpfile = $tmpdir.'/portstree.tar.gz';
+
+      if(file_exists($targetfile))
+         return $this->setArchiveForJobgroup($this->args['jobgroup'], $targeturi);
 
       if($this->downloadFile($this->args['repository']."/archive/".$this->args['commit'].".tar.gz", $tmpfile) !== true)
          return false;
@@ -64,9 +88,6 @@ class TaskPreparePortstree
 
       exec("rm -rf ".$tmpdir."/ports/Mk");
 
-      $targetdir = Config::get('logdir').'/'.$this->args['jobgroup'].'/';
-      $targetfile = $targetdir.'/portstree-'.$this->args['commit'].'.tar.xz';
-
       if(!file_exists($targetdir))
          mkdir($targetdir);
 
@@ -74,8 +95,8 @@ class TaskPreparePortstree
 
       exec("rm -rf ".$tmpdir);
 
-      // TODO: update jobs to set link to portstreefile
-      // TODO: move jobs to next queue
+      if($this->setArchiveForJobgroup($this->args['jobgroup'], $targeturi) !== true)
+         return false;
 
       return true;
    }
