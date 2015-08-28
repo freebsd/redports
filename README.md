@@ -15,9 +15,8 @@ This are the major TODO items before we can do a first
 node:
 - poudriere integration
 - business logic for building and talking to master
+  (node/lib/Redports/Node/Process/Child.php)
 
 master:
 - commit comments on github after end of build
-- portstree upload needs to update URL for all jobs with
-  that repository and revision
 
