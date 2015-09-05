@@ -17,6 +17,8 @@ use Redports\Node\Command\Command;
 use Cli\Helpers\DocumentedScript;
 use Cli\Helpers\Parameter;
 
+date_default_timezone_set('UTC');
+
 Config::loadFirst(array('/usr/local/etc/redports-node.json'));
 
 $app = new DocumentedScript();
