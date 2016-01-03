@@ -2,10 +2,9 @@
 
 namespace Redports\Node\Update;
 
+use Herrera\Phar\Update\Exception\InvalidArgumentException;
 use Herrera\Phar\Update\Manager;
 use Herrera\Phar\Update\Manifest;
-use Herrera\Phar\Update\Exception\FileException;
-use Herrera\Phar\Update\Exception\InvalidArgumentException;
 use KevinGH\Version\Version;
 
 /**
@@ -16,7 +15,7 @@ use KevinGH\Version\Version;
 class UpdateManager extends Manager
 {
     /**
-     * SHA256 hash of public key
+     * SHA256 hash of public key.
      *
      * @var string
      */
@@ -65,11 +64,11 @@ class UpdateManager extends Manager
      * Updates the running Phar if any is available and checks
      * the fingerprint of the public key.
      *
-     * @param string|Version $version  The current version.
-     * @param boolean        $major    Lock to current major version?
-     * @param boolean        $pre      Allow pre-releases?
+     * @param string|Version $version The current version.
+     * @param bool           $major   Lock to current major version?
+     * @param bool           $pre     Allow pre-releases?
      *
-     * @return boolean TRUE if an update was performed, FALSE if none available.
+     * @return bool TRUE if an update was performed, FALSE if none available.
      */
     public function update($version, $major = false, $pre = false)
     {
@@ -85,15 +84,17 @@ class UpdateManager extends Manager
             $tmpfile = $update->getFile();
 
             if (null !== $this->getPublicKeyHash()) {
-                if (false === is_file($tmpfile . '.pubkey')) {
+                if (false === is_file($tmpfile.'.pubkey')) {
                     echo "ALERT: Update not signed with public key!\n";
                     $update->deleteFile();
+
                     return false;
                 }
 
-                if (hash_file('sha256', $tmpfile . '.pubkey') !== $this->getPublicKeyHash()) {
+                if (hash_file('sha256', $tmpfile.'.pubkey') !== $this->getPublicKeyHash()) {
                     echo "ALERT: Public key fingerprint mismatch!!!\n";
                     $update->deleteFile();
+
                     return false;
                 }
             }

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * redports is a continuous integration platform for FreeBSD ports
+ * redports is a continuous integration platform for FreeBSD ports.
  *
  * @author     Bernhard Froehlich <decke@bluelife.at>
  * @copyright  2015 Bernhard Froehlich
  * @license    BSD License (2 Clause)
+ *
  * @link       https://freebsd.github.io/redports/
  */
-
 namespace Redports\Master;
 
 require_once __DIR__.'/vendor/autoload.php';
@@ -34,12 +34,13 @@ $app->post('/github/', function() use ($app) {
 
 /* Authentication - Login */
 $app->post('/auth/', function() use ($app, $session) {
-   if(!isset($_POST['machineid']) || !isset($_POST['secret']))
-      textResponse(403, 'Authentication failed');
-   else if(!$session->login($_POST['machineid'], $_POST['secret']))
-      textResponse(403, 'Authentication failed');
-   else
-      jsonResponse(200, array('sessionid' => $session->getSessionId()));
+   if (!isset($_POST['machineid']) || !isset($_POST['secret'])) {
+       textResponse(403, 'Authentication failed');
+   } elseif (!$session->login($_POST['machineid'], $_POST['secret'])) {
+       textResponse(403, 'Authentication failed');
+   } else {
+       jsonResponse(200, array('sessionid' => $session->getSessionId()));
+   }
 });
 
 $app->get('/auth/', function() use ($app) {
@@ -56,28 +57,31 @@ $app->get('/jails/', 'isAllowed', function() use ($app) {
 $app->get('/jails/:jailname/', 'isAllowed', function($jailname) use ($app) {
    $jails = new Jails();
 
-   if(!$jails->exists($jailname))
-      textResponse(404, 'Jail unknown');
-   else
-      jsonResponse(200, $jails->getJail($jailname));
+   if (!$jails->exists($jailname)) {
+       textResponse(404, 'Jail unknown');
+   } else {
+       jsonResponse(200, $jails->getJail($jailname));
+   }
 });
 
 /* Queues - info about a queue */
 $app->get('/queues/:queuename/:jailname/', 'isAllowed', function($queuename, $jailname) use ($app) {
    $queue = new Queue($queuename, $jailname);
 
-   if($queue->exists())
-      jsonResponse(200, $queue->getQueueInfo());
-   else
-      textResponse(404, 'Queue unknown');
+   if ($queue->exists()) {
+       jsonResponse(200, $queue->getQueueInfo());
+   } else {
+       textResponse(404, 'Queue unknown');
+   }
 });
 
 /* Queues - Take next job */
 $app->get('/queues/waitqueue/:jailname/take', 'isAllowed', function($jailname) use ($app) {
    $queue = new Queue('waitqueue', $jailname);
    $job = $queue->getNextJob();
-   if($job === false)
-      textResponse(204);
+   if ($job === false) {
+       textResponse(204);
+   }
 
    $machine = new Machine(Session::getMachineId());
    $machine->addJob($job->getJobId());
@@ -91,22 +95,25 @@ $app->post('/jobs/create', 'isAllowed', function() use ($app) {
    $queue = new Queue();
 
    $jail = new Jails();
-   if(!$jail->exists($_POST['jail']))
-      textResponse(404, 'Jail unknown');
+   if (!$jail->exists($_POST['jail'])) {
+       textResponse(404, 'Jail unknown');
+   }
 
    $repos = new Repositories();
-   if(!$repos->exists($_POST['repository']))
-      textResponse(404, 'Repository unknown');
+   if (!$repos->exists($_POST['repository'])) {
+       textResponse(404, 'Repository unknown');
+   }
 
    $jobgroup = new Jobgroup($_POST['jobgroup']);
-   if($jobgroup->exists())
-      textResponse(403, 'Jobgroup already exists');
+   if ($jobgroup->exists()) {
+       textResponse(403, 'Jobgroup already exists');
+   }
 
    $data = array(
-      'port' => $_POST['port'],
-      'jail' => $_POST['jail'],
+      'port'       => $_POST['port'],
+      'jail'       => $_POST['jail'],
       'repository' => $_POST['repository'],
-      'jobgroup' => $_POST['jobgroup']
+      'jobgroup'   => $_POST['jobgroup'],
    );
 
    $job = $queue->createJob($data);
@@ -119,30 +126,35 @@ $app->post('/jobs/create', 'isAllowed', function() use ($app) {
 $app->get('/jobs/:jobid/', 'isAllowed', function($jobid) use ($app) {
    $job = new Job($jobid);
 
-   if(!$job->exists())
-      textResponse(404, 'Job not found');
-   else
-      jsonResponse(200, $job->getJobData());
+   if (!$job->exists()) {
+       textResponse(404, 'Job not found');
+   } else {
+       jsonResponse(200, $job->getJobData());
+   }
 })->conditions(array('jobid' => '[0-9]'));
 
 /* Jobs - Upload logfile ... */
 $app->put('/jobs/:jobid/logfile/:filename', 'isAllowed', function($jobid, $filename) use ($app) {
    $job = new Job($jobid);
 
-   if(!$job->exists())
-      textResponse(404, 'Job not found');
+   if (!$job->exists()) {
+       textResponse(404, 'Job not found');
+   }
 
    $machine = new Machine(Session::getMachineId());
-   if(!$machine->hasJob($jobid))
-      textResponse(403, 'Job not assigned to you');
+   if (!$machine->hasJob($jobid)) {
+       textResponse(403, 'Job not assigned to you');
+   }
 
    $filepath = Config::get('logdir').'/'.$jobid.'/'.basename($filename);
 
-   if(file_exists($filepath))
-      textResponse(403, 'File already exists');
-   
-   if(!is_dir(dirname($filepath)))
-      mkdir(dirname($filepath), 0777, true);
+   if (file_exists($filepath)) {
+       textResponse(403, 'File already exists');
+   }
+
+   if (!is_dir(dirname($filepath))) {
+       mkdir(dirname($filepath), 0777, true);
+   }
 
    $fi = fopen('php://input', 'rb');
    $fo = fopen($filepath, 'w');
@@ -161,16 +173,19 @@ $app->put('/jobs/:jobid/logfile/:filename', 'isAllowed', function($jobid, $filen
 /* Jobs - Finish a job (with buildstatus and buildreason) */
 $app->post('/jobs/:jobid/finish', 'isAllowed', function($jobid) use ($app) {
 
-   if(!isset($_POST['buildstatus']) || !isset($_POST['buildreason']))
-      textResponse(400, 'Post data missing');
+   if (!isset($_POST['buildstatus']) || !isset($_POST['buildreason'])) {
+       textResponse(400, 'Post data missing');
+   }
 
    $job = new Job($jobid);
-   if($job === false)
-      textResponse(204);
+   if ($job === false) {
+       textResponse(204);
+   }
 
    $machine = new Machine(Session::getMachineId());
-   if(!$machine->hasJob($job->getJobId()))
-      textResponse(403, 'Job not assigned to you');
+   if (!$machine->hasJob($job->getJobId())) {
+       textResponse(403, 'Job not assigned to you');
+   }
 
    $job->unset('machine');
    $job->set('buildstatus', $_POST['buildstatus']);
@@ -183,12 +198,12 @@ $app->post('/jobs/:jobid/finish', 'isAllowed', function($jobid) use ($app) {
 $app->get('/group/:groupid/', 'isAllowed', function($groupid) use ($app) {
 
    $jobgroup = new Jobgroup($groupid);
-   if(!$jobgroup->exists())
-      textResponse(404, 'Jobgroup not found');
+   if (!$jobgroup->exists()) {
+       textResponse(404, 'Jobgroup not found');
+   }
 
    jsonResponse(200, $jobgroup->getGroupInfo());
 });
-
 
 /* 404 - not found */
 $app->notFound(function() use ($app) {
@@ -201,4 +216,3 @@ $app->error(function(\Exception $e) use ($app) {
 });
 
 $app->run();
-

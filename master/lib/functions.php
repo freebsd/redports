@@ -1,46 +1,47 @@
 <?php
 
 /**
- * Various functions
+ * Various functions.
  *
  * @author     Bernhard Froehlich <decke@bluelife.at>
  * @copyright  2015 Bernhard Froehlich
  * @license    BSD License (2 Clause)
+ *
  * @link       https://freebsd.github.io/redports/
  */
-
 function isAllowed()
 {
-   $app = \Slim\Slim::getInstance();
+    $app = \Slim\Slim::getInstance();
 
-   if(!\Redports\Master\Session::isAuthenticated()){
-      $app->halt(403, 'You are not authenticated');
-   }
+    if (!\Redports\Master\Session::isAuthenticated()) {
+        $app->halt(403, 'You are not authenticated');
+    }
 }
 
 function jsonResponse($code, $data = array())
 {
-   $app = \Slim\Slim::getInstance();
-   $app->response->setStatus($code);
-   $app->response->headers->set('Content-Type', 'application/json');
-   $app->response->write(json_encode($data));
+    $app = \Slim\Slim::getInstance();
+    $app->response->setStatus($code);
+    $app->response->headers->set('Content-Type', 'application/json');
+    $app->response->write(json_encode($data));
 
-   if($code != 200)
-      $app->stop();
+    if ($code != 200) {
+        $app->stop();
+    }
 
-   return true;
+    return true;
 }
 
 function textResponse($code, $data = '')
 {
-   $app = \Slim\Slim::getInstance();
-   $app->response->setStatus($code);
-   $app->response->headers->set('Content-Type', 'text/plain');
-   $app->response->write($data);
+    $app = \Slim\Slim::getInstance();
+    $app->response->setStatus($code);
+    $app->response->headers->set('Content-Type', 'text/plain');
+    $app->response->write($data);
 
-   if($code != 200)
-      $app->stop();
+    if ($code != 200) {
+        $app->stop();
+    }
 
-   return true;
+    return true;
 }
-
