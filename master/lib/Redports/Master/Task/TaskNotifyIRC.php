@@ -24,6 +24,7 @@ class TaskNotifyIRC
     * args:
     *  jobid   Job ID
     *  action  Action (started, finished, failed)
+    */
    public function perform()
    {
       $token = Config::get('ircbridgetoken');
