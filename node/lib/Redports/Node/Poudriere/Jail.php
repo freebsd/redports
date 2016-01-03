@@ -8,43 +8,43 @@ namespace Redports\Node\Poudriere;
  * @author     Bernhard Froehlich <decke@bluelife.at>
  * @copyright  2015 Bernhard Froehlich
  * @license    BSD License (2 Clause)
+ *
  * @link       https://freebsd.github.io/redports/
  */
 class Jail
 {
-   protected $binpath = '/usr/local/bin/poudriere';
+    protected $binpath = '/usr/local/bin/poudriere';
 
-   protected $_jailname;
-   protected $_version;
-   protected $_arch;
-   protected $_method;
-   protected $_path;
-   protected $_fs;
-   protected $_updated;
-   protected $_queue;
+    protected $_jailname;
+    protected $_version;
+    protected $_arch;
+    protected $_method;
+    protected $_path;
+    protected $_fs;
+    protected $_updated;
+    protected $_queue;
 
-   public function __construct($jailname)
-   {
-      $this->_load($jailname);
-   }
+    public function __construct($jailname)
+    {
+        $this->_load($jailname);
+    }
 
-   protected function _load($jailname)
-   {
-      exec(sprintf("%s jail -i -j %s", $this->binpath, $jailname), $output, $retval);
+    protected function _load($jailname)
+    {
+        exec(sprintf('%s jail -i -j %s', $this->binpath, $jailname), $output, $retval);
 
-      if($retval != 0 || count($output) < 1)
-         return false;
+        if ($retval != 0 || count($output) < 1) {
+            return false;
+        }
 
-      foreach($output as $line)
-      {
-         $parts = explode(':', $line, 2);
-         $tmp = explode(' ', $parts[0], 2);
-         
-         $key = trim($tmp[1]);
-         $value = trim($parts[1]);
+        foreach ($output as $line) {
+            $parts = explode(':', $line, 2);
+            $tmp = explode(' ', $parts[0], 2);
 
-         switch($key)
-         {
+            $key = trim($tmp[1]);
+            $value = trim($parts[1]);
+
+            switch ($key) {
             case 'name':
                $this->_jailname = $value;
             break;
@@ -67,83 +67,86 @@ class Jail
                $this->_updated = $value;
             break;
          }
-      }
+        }
 
-      unset($output);
-      exec(sprintf("zfs get -o value redports:queue %s", $this->_fs), $output, $retval);
+        unset($output);
+        exec(sprintf('zfs get -o value redports:queue %s', $this->_fs), $output, $retval);
 
-      if($retval == 0 && count($output) == 2)
-      {
-         $value = trim($output[1]);
+        if ($retval == 0 && count($output) == 2) {
+            $value = trim($output[1]);
 
-         if($value != '-' && $value != 'none')
-            $this->_queue = $value;
-      }
+            if ($value != '-' && $value != 'none') {
+                $this->_queue = $value;
+            }
+        }
 
-      return true;
-   }
+        return true;
+    }
 
-   function setQueue($queue)
-   {
-      if(!$this->_fs)
-         return false;
+    public function setQueue($queue)
+    {
+        if (!$this->_fs) {
+            return false;
+        }
 
-      exec(sprintf("zfs set redports:queue=%s %s", $queue, $this->_fs));
-      return true;
-   }
+        exec(sprintf('zfs set redports:queue=%s %s', $queue, $this->_fs));
 
-   function unsetQueue()
-   {
-      if(!$this->_fs)
-         return false;
+        return true;
+    }
 
-      exec(sprintf("zfs inherit -Sr redports:queue %s", $this->_fs));
-      return true;
-   }
+    public function unsetQueue()
+    {
+        if (!$this->_fs) {
+            return false;
+        }
 
-   function getJailname()
-   {
-      return $this->_jailname;
-   }
+        exec(sprintf('zfs inherit -Sr redports:queue %s', $this->_fs));
 
-   function getVersion()
-   {
-      return $this->_version;
-   }
+        return true;
+    }
 
-   function getArch()
-   {
-      return $this->_arch;
-   }
+    public function getJailname()
+    {
+        return $this->_jailname;
+    }
 
-   function getMethod()
-   {
-      return $this->_method;
-   }
+    public function getVersion()
+    {
+        return $this->_version;
+    }
 
-   function getPath()
-   {
-      return $this->_path;
-   }
+    public function getArch()
+    {
+        return $this->_arch;
+    }
 
-   function getFilesystem()
-   {
-      return $this->_fs;
-   }
+    public function getMethod()
+    {
+        return $this->_method;
+    }
 
-   function getUpdated()
-   {
-      return $this->_updated;
-   }
+    public function getPath()
+    {
+        return $this->_path;
+    }
 
-   function getQueue()
-   {
-      return $this->_queue;
-   }
+    public function getFilesystem()
+    {
+        return $this->_fs;
+    }
 
-   function getPortstree()
-   {
-      return new Portstree($this->_jailname);
-   }
+    public function getUpdated()
+    {
+        return $this->_updated;
+    }
+
+    public function getQueue()
+    {
+        return $this->_queue;
+    }
+
+    public function getPortstree()
+    {
+        return new Portstree($this->_jailname);
+    }
 }
-

@@ -3,38 +3,37 @@
 namespace Redports\Master\Task;
 
 /**
- * Resque Job to send build notification to our IRC bridge
+ * Resque Job to send build notification to our IRC bridge.
  *
  * @author     Bernhard Froehlich <decke@bluelife.at>
  * @copyright  2015 Bernhard Froehlich
  * @license    BSD License (2 Clause)
+ *
  * @link       https://freebsd.github.io/redports/
  */
 class TaskNotifyIRC
 {
-   protected $_db;
+    protected $_db;
 
-   function __construct()
-   {
-      $this->_db = Config::getDatabaseHandle();
-   }
+    public function __construct()
+    {
+        $this->_db = Config::getDatabaseHandle();
+    }
 
    /**
-    *
     * args:
     *  jobid   Job ID
-    *  action  Action (started, finished, failed)
+    *  action  Action (started, finished, failed).
     */
    public function perform()
    {
-      $token = Config::get('ircbridgetoken');
-      $job = new Job($this->args['jobid']);
-      $jobdata = $job->getJobData();
+       $token = Config::get('ircbridgetoken');
+       $job = new Job($this->args['jobid']);
+       $jobdata = $job->getJobData();
 
-      $msg = sprintf('[%%02%s%%0f] (%s) - %s - ', $jobdata['jail'], $jobdata['creator'], $jobdata['port']);
+       $msg = sprintf('[%%02%s%%0f] (%s) - %s - ', $jobdata['jail'], $jobdata['creator'], $jobdata['port']);
 
-      switch($this->args['action'])
-      {
+       switch ($this->args['action']) {
          case 'started':
             $msg .= 'started';
          break;
@@ -49,10 +48,10 @@ class TaskNotifyIRC
          break;
       }
 
-      if(file_get_contents("https://redportsircbot-bluelife.rhcloud.com/?token=".$token."&msg=".urlencode($msg)) === false)
-         return false;
+       if (file_get_contents('https://redportsircbot-bluelife.rhcloud.com/?token='.$token.'&msg='.urlencode($msg)) === false) {
+           return false;
+       }
 
-      return true;
+       return true;
    }
 }
-

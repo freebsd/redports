@@ -3,172 +3,189 @@
 namespace Redports\Master;
 
 /**
- * Build job for an individual port on an individual jail
+ * Build job for an individual port on an individual jail.
  *
  * @author     Bernhard Froehlich <decke@bluelife.at>
  * @copyright  2015 Bernhard Froehlich
  * @license    BSD License (2 Clause)
+ *
  * @link       https://freebsd.github.io/redports/
  */
 class Job
 {
-   protected $_db;
-   protected $_jobid = null;
-   protected $_data = null;
-   protected $_queues = array('preparequeue', 'waitqueue', 'runqueue', 'archivequeue');
+    protected $_db;
+    protected $_jobid = null;
+    protected $_data = null;
+    protected $_queues = array('preparequeue', 'waitqueue', 'runqueue', 'archivequeue');
 
-   function __construct($jobid = null)
-   {
-      $this->_db = Config::getDatabaseHandle();
+    public function __construct($jobid = null)
+    {
+        $this->_db = Config::getDatabaseHandle();
 
-      $this->_jobid = $jobid;
-      $this->_load();
-   }
+        $this->_jobid = $jobid;
+        $this->_load();
+    }
 
-   function exists()
-   {
-      if($this->_jobid == null)
-         return false;
+    public function exists()
+    {
+        if ($this->_jobid == null) {
+            return false;
+        }
 
-      return $this->_db->exists('jobs:'.$this->_jobid);
-   }
+        return $this->_db->exists('jobs:'.$this->_jobid);
+    }
 
-   function _load()
-   {
-      if(!$this->exists())
-         return false;
+    public function _load()
+    {
+        if (!$this->exists()) {
+            return false;
+        }
 
-      if(($this->_data = $this->_db->get('jobs:'.$this->_jobid)) === false)
-         return false;
-      return true;
-   }
+        if (($this->_data = $this->_db->get('jobs:'.$this->_jobid)) === false) {
+            return false;
+        }
 
-   function save()
-   {
-      if($this->_jobid == null)
-      {
-         $this->_jobid = $this->_db->incr('sequ:jobs');
-         $this->_data['jobid'] = $this->_jobid;
+        return true;
+    }
 
-         $this->_db->sAdd('alljobs', $this->_jobid);
-         $this->_db->sAdd('repojobs:'.$this->getRepository(), $this->_jobid);
-         $this->_db->zAdd($this->getFullQueue(), $this->getPriority(), $this->_jobid);
-      }
+    public function save()
+    {
+        if ($this->_jobid == null) {
+            $this->_jobid = $this->_db->incr('sequ:jobs');
+            $this->_data['jobid'] = $this->_jobid;
 
-      return $this->_db->set('jobs:'.$this->_jobid, json_encode($this->_data));
-   }
+            $this->_db->sAdd('alljobs', $this->_jobid);
+            $this->_db->sAdd('repojobs:'.$this->getRepository(), $this->_jobid);
+            $this->_db->zAdd($this->getFullQueue(), $this->getPriority(), $this->_jobid);
+        }
 
-   function getJobId()
-   {
-      return $this->_jobid;
-   }
+        return $this->_db->set('jobs:'.$this->_jobid, json_encode($this->_data));
+    }
 
-   function getFullQueue()
-   {
-      return $this->_data['queue'].':'.$this->_data['jail'];
-   }
+    public function getJobId()
+    {
+        return $this->_jobid;
+    }
 
-   function getQueue()
-   {
-      return $this->_data['queue'];
-   }
+    public function getFullQueue()
+    {
+        return $this->_data['queue'].':'.$this->_data['jail'];
+    }
 
-   function getRepository()
-   {
-      return $this->_data['repository']['url'];
-   }
+    public function getQueue()
+    {
+        return $this->_data['queue'];
+    }
 
-   function getPriority()
-   {
-      return $this->_db->zScore($this->getFullQueue(), $this->_jobid);
-   }
+    public function getRepository()
+    {
+        return $this->_data['repository']['url'];
+    }
 
-   function incPriority($inc)
-   {
-      return $this->_db->zIncrBy($this->getFullQueue(), $inc, $this->_jobid);
-   }
+    public function getPriority()
+    {
+        return $this->_db->zScore($this->getFullQueue(), $this->_jobid);
+    }
 
-   function setPriority($newprio)
-   {
-      return $this->incPriority($newprio-$this->getPriority());
-   }
+    public function incPriority($inc)
+    {
+        return $this->_db->zIncrBy($this->getFullQueue(), $inc, $this->_jobid);
+    }
 
-   function getJobData()
-   {
-      return $this->_data;
-   }
+    public function setPriority($newprio)
+    {
+        return $this->incPriority($newprio - $this->getPriority());
+    }
 
-   function setJobData($data)
-   {
-      if(!isset($data['queue']))
-         $data['queue'] = $this->_queues[0];
+    public function getJobData()
+    {
+        return $this->_data;
+    }
 
-      if(!isset($data['priority']))
-         $data['priority'] = 50;
+    public function setJobData($data)
+    {
+        if (!isset($data['queue'])) {
+            $data['queue'] = $this->_queues[0];
+        }
 
-      if(!isset($data['jail']))
-         return false;
+        if (!isset($data['priority'])) {
+            $data['priority'] = 50;
+        }
 
-      if(!isset($data['repository']))
-         return false;
+        if (!isset($data['jail'])) {
+            return false;
+        }
 
-      if(!isset($data['port']))
-         return false;
+        if (!isset($data['repository'])) {
+            return false;
+        }
 
-      $data['jobid'] = $this->getJobId();
+        if (!isset($data['port'])) {
+            return false;
+        }
 
-      $this->_data = $data;
-      return true;
-   }
+        $data['jobid'] = $this->getJobId();
 
-   function get($field)
-   {
-      if(isset($this->_data[$field]))
-         return $this->_data[$field];
+        $this->_data = $data;
 
-      return null;
-   }
+        return true;
+    }
 
-   function set($field, $value)
-   {
-      if($field == 'jobid')
-         return false;
+    public function get($field)
+    {
+        if (isset($this->_data[$field])) {
+            return $this->_data[$field];
+        }
 
-      $this->_data[$field] = $value;
-      return true;
-   }
+        return;
+    }
 
-   function del($field)
-   {
-      if($field == 'jobid')
-         return false;
+    public function set($field, $value)
+    {
+        if ($field == 'jobid') {
+            return false;
+        }
 
-      if(!isset($this->_data[$field]))
-         return false;
+        $this->_data[$field] = $value;
 
-      unset($this->_data[$field]);
-      return true;
-   }
+        return true;
+    }
 
-   function moveToQueue($queue)
-   {
-      if(!in_array($queue, $this->_queues))
-      {
-         trigger_error('Queuename is invalid', E_USER_ERROR);
-         return false;
-      }
+    public function del($field)
+    {
+        if ($field == 'jobid') {
+            return false;
+        }
 
-      $score = $this->getPriority();
+        if (!isset($this->_data[$field])) {
+            return false;
+        }
 
-      if($this->_db->zRem($this->getFullQueue(), $this->_jobid) !== true)
-         return false;
+        unset($this->_data[$field]);
 
-      $this->_data['queue'] = $queue;
+        return true;
+    }
 
-      if($this->_db->zAdd($this->getFullQueue(), $score, $this->_jobid) !== true)
-         return false;
+    public function moveToQueue($queue)
+    {
+        if (!in_array($queue, $this->_queues)) {
+            trigger_error('Queuename is invalid', E_USER_ERROR);
 
-      return $this->save();
-   }
+            return false;
+        }
+
+        $score = $this->getPriority();
+
+        if ($this->_db->zRem($this->getFullQueue(), $this->_jobid) !== true) {
+            return false;
+        }
+
+        $this->_data['queue'] = $queue;
+
+        if ($this->_db->zAdd($this->getFullQueue(), $score, $this->_jobid) !== true) {
+            return false;
+        }
+
+        return $this->save();
+    }
 }
-

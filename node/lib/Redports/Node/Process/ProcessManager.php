@@ -2,8 +2,8 @@
 
 namespace Redports\Node\Process;
 
-use Redports\Node\Config;
 use Redports\Node\Client\Client;
+use Redports\Node\Config;
 
 /**
  * Process Manager which runs one child per jailname
@@ -12,73 +12,78 @@ use Redports\Node\Client\Client;
  * @author     Bernhard Froehlich <decke@bluelife.at>
  * @copyright  2015 Bernhard Froehlich
  * @license    BSD License (2 Clause)
+ *
  * @link       https://freebsd.github.io/redports/
  */
 class ProcessManager
 {
-   protected $_stop = false;
-   protected $_childs = array();
-   protected $_jails = array();
-   protected $_client;
-   protected $_log;
+    protected $_stop = false;
+    protected $_childs = array();
+    protected $_jails = array();
+    protected $_client;
+    protected $_log;
 
-   function __construct()
-   {
-      if(!function_exists('pcntl_fork'))
-         trigger_error('pcntl extension not loaded!', E_USER_ERROR);
+    public function __construct()
+    {
+        if (!function_exists('pcntl_fork')) {
+            trigger_error('pcntl extension not loaded!', E_USER_ERROR);
+        }
 
-      $this->_log = Config::getLogger();
-      $this->_client = new Client();
-   }
+        $this->_log = Config::getLogger();
+        $this->_client = new Client();
+    }
 
-   function addJail($jail)
-   {
-      $jailname = $jail->getJailname();
+    public function addJail($jail)
+    {
+        $jailname = $jail->getJailname();
 
-      if(isset($this->_jails[$jailname]))
-         return false;
+        if (isset($this->_jails[$jailname])) {
+            return false;
+        }
 
-      if(isset($this->_childs[$jailname]))
-         return false;
+        if (isset($this->_childs[$jailname])) {
+            return false;
+        }
 
-      $this->_childs[$jailname] = 0;
-      $this->_jails[$jailname] = $jail;
-      return true;
-   }
+        $this->_childs[$jailname] = 0;
+        $this->_jails[$jailname] = $jail;
 
-   function getPid($jailname)
-   {
-      if(isset($this->_childs[$jailname]))
-         return $this->_childs[$jailname];
-   }
+        return true;
+    }
 
-   function getJailname($pid)
-   {
-      return array_search($pid, $this->_childs);
-   }
+    public function getPid($jailname)
+    {
+        if (isset($this->_childs[$jailname])) {
+            return $this->_childs[$jailname];
+        }
+    }
 
-   function countChilds()
-   {
-      $childs = 0;
+    public function getJailname($pid)
+    {
+        return array_search($pid, $this->_childs);
+    }
 
-      foreach($this->_childs as $jail => $pid)
-      {
-         if($pid > 0)
-            $childs++;
-      }
+    public function countChilds()
+    {
+        $childs = 0;
 
-      return $childs;
-   }
+        foreach ($this->_childs as $jail => $pid) {
+            if ($pid > 0) {
+                $childs++;
+            }
+        }
 
-   function stop()
-   {
-      $this->_stop = true;
-   }
+        return $childs;
+    }
 
-   function sighandler($signo)
-   {
-      switch($signo)
-      {
+    public function stop()
+    {
+        $this->_stop = true;
+    }
+
+    public function sighandler($signo)
+    {
+        switch ($signo) {
          case SIGTERM:
             $this->_log->notice('Got SIGTERM ...');
             $this->stop();
@@ -94,81 +99,76 @@ class ProcessManager
          default:
             $this->_log->warning('Got unknown signal '.$signo);
       }
-   }
+    }
 
-   function run()
-   {
-      if(!$this->_client->login())
-         return false;
+    public function run()
+    {
+        if (!$this->_client->login()) {
+            return false;
+        }
 
-      declare(ticks = 100);
+        declare(ticks=100);
 
-      pcntl_signal(SIGTERM, array($this, 'sighandler'));
-      pcntl_signal(SIGHUP, array($this, 'sighandler'));
-      pcntl_signal(SIGINT, array($this, 'sighandler'));
-      $this->_stop = false;
+        pcntl_signal(SIGTERM, array($this, 'sighandler'));
+        pcntl_signal(SIGHUP, array($this, 'sighandler'));
+        pcntl_signal(SIGINT, array($this, 'sighandler'));
+        $this->_stop = false;
 
-      while(!$this->_stop)
-      {
-         foreach($this->_childs as $jailname => $pid)
-         {
-            if($pid != 0)
-               continue;
+        while (!$this->_stop) {
+            foreach ($this->_childs as $jailname => $pid) {
+                if ($pid != 0) {
+                    continue;
+                }
 
-            $pid = pcntl_fork();
-            if($pid == -1)
-               trigger_error('Forking failed!!', E_USER_ERROR);
+                $pid = pcntl_fork();
+                if ($pid == -1) {
+                    trigger_error('Forking failed!!', E_USER_ERROR);
+                }
 
-            if($pid)
-            {
-               /* Parent */
+                if ($pid) {
+                    /* Parent */
                $this->_childs[$jailname] = $pid;
-            }
-            else
-            {
-               /* Child */
+                } else {
+                    /* Child */
                $child = new Child($this->_client, $this->_jails[$jailname]);
-               $child->run();
+                    $child->run();
 
                /* delay to avoid fast respawning */
                sleep(2);
 
-               exit();
-            }
-         }
-
-         while(true)
-         {
-            $pid = pcntl_waitpid(-1, $status, WNOHANG);
-
-            if($pid === null || $pid < 1)
-               break;
-
-            $jailname = $this->getJailname($pid);
-            if($jailname === false)
-            {
-               $this->_log->error('No jail found for pid '.$pid);
-               continue;
+                    exit();
+                }
             }
 
-            $this->_log->info('child '.$pid.' for '.$jailname.' removed');
-            $this->_childs[$jailname] = 0;
-         }
+            while (true) {
+                $pid = pcntl_waitpid(-1, $status, WNOHANG);
 
-         usleep(500000);
-      }
+                if ($pid === null || $pid < 1) {
+                    break;
+                }
+
+                $jailname = $this->getJailname($pid);
+                if ($jailname === false) {
+                    $this->_log->error('No jail found for pid '.$pid);
+                    continue;
+                }
+
+                $this->_log->info('child '.$pid.' for '.$jailname.' removed');
+                $this->_childs[$jailname] = 0;
+            }
+
+            usleep(500000);
+        }
 
       /* wait for childs to exit */
-      while($this->countChilds() > 0)
-      {
-         $this->_log->info('waiting for '.$this->countChilds().' children');
-         $pid = pcntl_wait($status);
+      while ($this->countChilds() > 0) {
+          $this->_log->info('waiting for '.$this->countChilds().' children');
+          $pid = pcntl_wait($status);
 
-         $jailname = $this->getJailname($pid);
-         $this->_childs[$jailname] = 0;
+          $jailname = $this->getJailname($pid);
+          $this->_childs[$jailname] = 0;
       }
 
-      return true;
-   }
+        return true;
+    }
 }
-
