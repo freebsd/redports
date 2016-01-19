@@ -16,7 +16,7 @@ class Config
     protected static $settings = array(
       'debug'          => true,
       'datasource'     => '/var/run/redis/redis.sock',
-      'logdir'         => __DIR__.'/../logs',
+      'logdir'         => __DIR__.'/../../../logs',
       'https_only'     => true,
       'ircbridgetoken' => '',
       'userconfig'     => array(
