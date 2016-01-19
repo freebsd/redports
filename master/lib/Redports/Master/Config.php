@@ -41,6 +41,7 @@ class Config
         } else {
             $GLOBALS['redis'] = new \Redis();
             $GLOBALS['redis']->pconnect(self::get('datasource'));
+
             return $GLOBALS['redis'];
         }
 
