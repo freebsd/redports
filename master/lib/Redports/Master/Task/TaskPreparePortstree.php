@@ -1,6 +1,9 @@
 <?php
 
 namespace Redports\Master\Task;
+use \Redports\Master\Config;
+use \Redports\Master\Job;
+use \Redports\Master\Jobgroup;
 
 /**
  * Resque Job to prepare a Portstree overlay.
@@ -110,3 +113,4 @@ class TaskPreparePortstree
         return true;
     }
 }
+

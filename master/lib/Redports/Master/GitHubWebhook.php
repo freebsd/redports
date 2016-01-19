@@ -109,7 +109,7 @@ class GitHubWebhook
             'created'    => time(),
          );
 
-            \Resque::enqueue('default', 'TaskPreparePortstree', $args);
+            \Resque::enqueue('default', '\Redports\Master\Task\TaskPreparePortstree', $args);
         }
 
         return true;
