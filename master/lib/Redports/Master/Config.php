@@ -38,10 +38,9 @@ class Config
     {
         if (isset($GLOBALS['redis'])) {
             return $GLOBALS['redis'];
-        }
-        else {
+        } else {
             $GLOBALS['redis'] = new \Redis();
-            $GLOBALS['redis']->pconnect(Config::get('datasource'));
+            $GLOBALS['redis']->pconnect(self::get('datasource'));
             return $GLOBALS['redis'];
         }
 
