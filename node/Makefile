@@ -10,7 +10,7 @@ clean:
 	rm -f redports-node-*.phar* manifest.json
 
 box.phar:
-	fetch -q -o - http://box-project.org/installer.php | php
+	fetch -q -o - http://box-project.github.io/box2/installer.php | php
 
 private.key: box.phar
 	php box.phar key:create
