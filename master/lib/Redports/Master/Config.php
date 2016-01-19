@@ -39,6 +39,11 @@ class Config
         if (isset($GLOBALS['redis'])) {
             return $GLOBALS['redis'];
         }
+        else {
+            $GLOBALS['redis'] = new \Redis();
+            $GLOBALS['redis']->pconnect(Config::get('datasource'));
+            return $GLOBALS['redis'];
+        }
 
         return false;
     }
