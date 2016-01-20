@@ -28,15 +28,15 @@ class Session
 
     public static function initialize()
     {
-        // Set Redis as session handler
+      // Set Redis as session handler
       ini_set('session.save_handler', 'redis');
-        ini_set('session.save_path', 'unix:///var/run/redis/redis.sock?persistent=1');
+      ini_set('session.save_path', 'unix:///var/run/redis/redis.sock?persistent=1');
 
       // Specify hash function used for session ids. Usually does not
       // work on FreeBSD unless hash functions are compiled into the binary
       //ini_set('session.hash_function', 'sha256');
       ini_set('session.hash_bits_per_character', 5);
-        ini_set('session.entropy_length', 512);
+      ini_set('session.entropy_length', 512);
 
       // Set session lifetime in redis (8h)
       ini_set('session.gc_maxlifetime', 28800);
@@ -47,10 +47,10 @@ class Session
       // do not expose Cookie value to JavaScript (enforced by browser)
       ini_set('session.cookie_httponly', 1);
 
-        if (Config::get('https_only') === true) {
-            // only send cookie over https
-         ini_set('session.cookie_secure', 1);
-        }
+      if (Config::get('https_only') === true) {
+          // only send cookie over https
+          ini_set('session.cookie_secure', 1);
+      }
 
       // prevent caching by sending no-cache header
       session_cache_limiter('nocache');
@@ -79,8 +79,8 @@ class Session
             session_start();
         }
 
-      /* login successfull */
-      $_SESSION['authenticated'] = true;
+        /* login successfull */
+        $_SESSION['authenticated'] = true;
         $_SESSION['machineid'] = $machine->getName();
         $_SESSION['loginip'] = $_SERVER['REMOTE_ADDR'];
         $_SESSION['useragent'] = $_SERVER['HTTP_USER_AGENT'];
@@ -106,12 +106,12 @@ class Session
     {
         $_SESSION = array();
 
-      /* also destroy session cookie on client */
-      $params = session_get_cookie_params();
+        /* also destroy session cookie on client */
+        $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 42000,
-         $params['path'], $params['domain'],
-         $params['secure'], $params['httponly']
-      );
+            $params['path'], $params['domain'],
+            $params['secure'], $params['httponly']
+        );
 
         session_destroy();
 
