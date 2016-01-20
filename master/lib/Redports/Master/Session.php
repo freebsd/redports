@@ -20,7 +20,7 @@ class Session
         if (isset($_COOKIE['SESSIONID'])) {
             session_start();
 
-            if ($_SESSION['loginip'] != $_SERVER['REMOTE_ADDR']) {
+            if (!isset($_SESSION['loginip']) || $_SESSION['loginip'] != $_SERVER['REMOTE_ADDR']) {
                 $this->logout();
             }
         }
