@@ -18,9 +18,7 @@ node:
   (node/lib/Redports/Node/Process/Child.php)
 
 master:
+- Repository setup via GitHub API
 - GitHub Status API Integration
 https://github.com/KnpLabs/php-github-api/blob/master/lib/Github/Api/Repository/Statuses.php
-
-- GitHub oauth integration when a user registers
-https://gist.github.com/technoweenie/419219 https://docs.travis-ci.com/user/github-oauth-scopes/
 
