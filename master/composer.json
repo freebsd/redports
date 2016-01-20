@@ -7,6 +7,7 @@
       "slim/slim": "2.*",
       "knplabs/github-api": "~1.4",
       "chrisboulton/php-resque": "dev-master as 1.2.x-dev",
+      "lusitanian/oauth": "~0.3",
       "php": ">=5.4.0"
    },
    "autoload": {

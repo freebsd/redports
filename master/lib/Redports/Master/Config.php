@@ -14,11 +14,14 @@ namespace Redports\Master;
 class Config
 {
     protected static $settings = array(
-      'debug'          => true,
-      'datasource'     => '/var/run/redis/redis.sock',
-      'logdir'         => __DIR__.'/../../../logs',
-      'https_only'     => true,
-      'ircbridgetoken' => '',
+      'debug'                    => true,
+      'datasource'               => '/var/run/redis/redis.sock',
+      'logdir'                   => __DIR__.'/../../../logs',
+      'https_only'               => true,
+      'ircbridgetoken'           => '',
+      'github.oauth.key'         => '',
+      'github.oauth.secret'      => '',
+      'github.oauth.redirecturl' => 'https://api.redports.org/oauth/login',
       'userconfig'     => array(
           'jails'   => array('10.1-RELEASE-amd64', '10.1-RELEASE-i386'),
           'notify'  => 'commit', /* commit, email, none */

@@ -24,6 +24,60 @@ $redis->pconnect(Config::get('datasource'));
 
 \Resque::setBackend(Config::get('datasource'));
 
+/* GitHub OAuth login */
+$app->get('/oauth/login', function() use ($app) {
+   $credentials = new \OAuth\Common\Consumer\Credentials(
+      Config::get('github.oauth.key'),
+      Config::get('github.oauth.secret'),
+      Config::get('github.oauth.redirecturl')
+   );
+
+   $serviceFactory = new \OAuth\ServiceFactory();
+   $gitHub = $serviceFactory->createService('GitHub', $credentials,
+      new \OAuth\Common\Storage\Session(), array(
+         'user:email',
+         'public_repo',
+         'repo:status',
+         'admin:repo_hook'
+      )
+   );
+   
+   if(isset($_GET['code'])) {
+      try {
+         $token = $gitHub->requestAccessToken($_GET['code']);
+
+         $result = json_decode($gitHub->request('user'), true);
+
+         $user = new User($result['login']);
+         $user->set('name', $result['name']);
+         $user->set('email', $result['email']);
+         $user->set('token', $token->getAccessToken());
+         $user->save();
+
+         $app->redirect('/oauth/repos');
+      } catch (\OAuth\Common\Http\Exception\TokenResponseException $e) {
+         textResponse(500, $e->getMessage());
+      }
+   } else {
+      $app->redirect($gitHub->getAuthorizationUri());
+   }
+});
+
+/* GitHub repository setup */
+$app->get('/oauth/repos', function() use ($app) {
+   /* TODO: show repositories and their redports status */
+   /* TODO: allow to choose which ones to setup for redports */
+
+   textResponse(500, 'Not implemented yet');
+});
+
+/* GitHub repository setup */
+$app->get('/oauth/setuprepo', function() use ($app) {
+   /* TODO: setup repository hooks and redirect back to repo overview */
+
+   $app->redirect('/oauth/repos');
+});
+
 /* GitHub Webhooks */
 $app->post('/github/', function() use ($app) {
    $github = new GitHubWebhook();
