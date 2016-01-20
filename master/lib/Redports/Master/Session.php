@@ -20,7 +20,7 @@ class Session
         if (isset($_COOKIE['SESSIONID'])) {
             session_start();
 
-            if (!isset($_SESSION['loginip']) || $_SESSION['loginip'] != $_SERVER['REMOTE_ADDR']) {
+            if (isset($_SESSION['loginip']) && $_SESSION['loginip'] != $_SERVER['REMOTE_ADDR']) {
                 $this->logout();
             }
         }
@@ -85,6 +85,27 @@ class Session
         $_SESSION['loginip'] = $_SERVER['REMOTE_ADDR'];
         $_SESSION['useragent'] = $_SERVER['HTTP_USER_AGENT'];
 
+        if(isset($_SESSION['username']))
+            unset($_SESSION['username']);
+
+        return true;
+    }
+
+    public static function loginUser($username)
+    {
+        if (session_id() === '') {
+            session_start();
+        }
+        
+        /* login assumed to be successfull */
+        $_SESSION['authenticated'] = true;
+        $_SESSION['username'] = $username;
+        $_SESSION['loginip'] = $_SERVER['REMOTE_ADDR'];
+        $_SESSION['useragent'] = $_SERVER['HTTP_USER_AGENT'];
+
+        if(isset($_SESSION['machineid']))
+            unset($_SESSION['machineid']);
+
         return true;
     }
 
@@ -92,6 +113,15 @@ class Session
     {
         if (isset($_SESSION['machineid'])) {
             return $_SESSION['machineid'];
+        }
+
+        return false;
+    }
+
+    public static function getUsername()
+    {
+        if (isset($_SESSION['username'])) {
+            return $_SESSION['username'];
         }
 
         return false;

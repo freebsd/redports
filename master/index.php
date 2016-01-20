@@ -25,7 +25,7 @@ $redis->pconnect(Config::get('datasource'));
 \Resque::setBackend(Config::get('datasource'));
 
 /* GitHub OAuth login */
-$app->get('/oauth/login', function() use ($app) {
+$app->get('/oauth/login', function() use ($app, $session) {
    $credentials = new \OAuth\Common\Consumer\Credentials(
       Config::get('github.oauth.key'),
       Config::get('github.oauth.secret'),
@@ -54,6 +54,8 @@ $app->get('/oauth/login', function() use ($app) {
          $user->set('token', $token->getAccessToken());
          $user->save();
 
+         $session->loginUser($user->getUsername());
+
          $app->redirect('/oauth/repos');
       } catch (\OAuth\Common\Http\Exception\TokenResponseException $e) {
          textResponse(500, $e->getMessage());
@@ -63,17 +65,47 @@ $app->get('/oauth/login', function() use ($app) {
    }
 });
 
-/* GitHub repository setup */
-$app->get('/oauth/repos', function() use ($app) {
-   /* TODO: show repositories and their redports status */
-   /* TODO: allow to choose which ones to setup for redports */
+/* GitHub list repositories */
+$app->get('/oauth/repos', function() use ($app, $session) {
+   $app->response->headers->set('Content-Type', 'text/html');
 
-   textResponse(500, 'Not implemented yet');
+   if(!$session->getUsername())
+      textResponse(403, 'Not authenticated');
+
+   $user = new User($session->getUsername());
+   $client = new \Github\Client();
+   $client->authenticate($user->get('token'), null, \Github\Client::AUTH_HTTP_TOKEN);
+
+   foreach($client->api('user')->repositories($session->getUsername()) as $repository){
+      printf('%s <a href="/oauth/setuprepo?repo=%s">setup</a><br>%s<br><br>',
+         $repository['full_name'], $repository['name'], $repository['description']);
+   }
 });
 
 /* GitHub repository setup */
-$app->get('/oauth/setuprepo', function() use ($app) {
-   /* TODO: setup repository hooks and redirect back to repo overview */
+$app->get('/oauth/setuprepo', function() use ($app, $session) {
+   if(!$session->getUsername())
+      textResponse(403, 'Not authenticated');
+
+   $user = new User($session->getUsername());
+   $client = new \Github\Client();
+   $client->authenticate($user->get('token'), null, \Github\Client::AUTH_HTTP_TOKEN);
+
+   /* TODO: check if hook exists before creating (otherwise API request fails) */
+
+   $webhook = $client->api('repo')->hooks()->create($user->getUsername(), $_GET['repo'],
+      array(
+         'name' => 'web',
+         'active' => true,
+         'events' => array(
+            'push'
+         ),
+         'config' => array(
+            'url' => 'https://api.redports.org/github/',
+            'content_type' => 'json'
+         )
+      )
+   );
 
    $app->redirect('/oauth/repos');
 });
