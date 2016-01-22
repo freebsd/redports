@@ -69,7 +69,7 @@ class Session
         if (session_id() === '') {
             session_start();
         }
-        
+
         /* login assumed to be successfull */
         $_SESSION['authenticated'] = true;
         $_SESSION['username'] = $username;

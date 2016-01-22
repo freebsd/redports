@@ -50,8 +50,9 @@ class User
 
     public function get($key, $default = false)
     {
-        if(isset($this->_data[$key]))
-           return $this->_data[$key];
+        if (isset($this->_data[$key])) {
+            return $this->_data[$key];
+        }
 
         return $default;
     }
@@ -59,6 +60,7 @@ class User
     public function set($key, $value)
     {
         $this->_data[$key] = $value;
+
         return true;
     }
 }

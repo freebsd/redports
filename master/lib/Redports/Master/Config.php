@@ -22,7 +22,7 @@ class Config
       'github.oauth.key'         => '',
       'github.oauth.secret'      => '',
       'github.oauth.redirecturl' => 'https://api.redports.org/oauth/login',
-      'userconfig'     => array(
+      'userconfig'               => array(
           'jails'   => array('10.1-RELEASE-amd64', '10.1-RELEASE-i386'),
           'notify'  => 'commit', /* commit, email, none */
       ),
