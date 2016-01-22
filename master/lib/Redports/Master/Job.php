@@ -39,6 +39,7 @@ class Job
     {
         if ($this->exists()) {
             $this->_data = json_decode($this->_db->get('jobs:'.$this->_jobid), true);
+
             return true;
         }
 
