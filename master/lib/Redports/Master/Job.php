@@ -37,15 +37,12 @@ class Job
 
     public function _load()
     {
-        if (!$this->exists()) {
-            return false;
+        if ($this->exists()) {
+            $this->_data = json_decode($this->_db->get('jobs:'.$this->_jobid), true);
+            return true;
         }
 
-        if (($this->_data = $this->_db->get('jobs:'.$this->_jobid)) === false) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     public function save()
