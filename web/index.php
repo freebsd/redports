@@ -15,7 +15,18 @@ require_once __DIR__.'/vendor/autoload.php';
 
 $session = new Session();
 
-$app = new \Slim\App();
+$app = new \Slim\App(new \Slim\Container(Config::get('slimconfig')));
+
+/* init php-view */
+$container = $app->getContainer();
+$container['view'] = function($container){
+   return new \Slim\Views\PhpRenderer(__DIR__.'/templates/');
+};
+
+/* landing page */
+$app->get('/test', function($request, $response, $args) use ($session) {
+   return $this->view->render($response, 'index.html', $args);
+});
 
 /* GitHub OAuth login */
 $app->get('/login', function($request, $response) use ($session) {
@@ -103,6 +114,8 @@ $app->get('/repositories/{repository}/setup', function($request, $response, $arg
          )
       )
    );
+
+   /* TODO: register repository at master */
 
    return $response->withRedirect('/repositories');
 });

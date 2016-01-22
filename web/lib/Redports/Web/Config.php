@@ -14,10 +14,15 @@ namespace Redports\Web;
 class Config
 {
     protected static $settings = array(
-      'https_only'               => true,
-      'github.oauth.key'         => '',
-      'github.oauth.secret'      => '',
-      'github.oauth.redirecturl' => 'https://www.redports.org/login'
+        'https_only'               => true,
+        'github.oauth.key'         => '',
+        'github.oauth.secret'      => '',
+        'github.oauth.redirecturl' => 'https://redports.org/login',
+        'slimconfig' => array(
+            'settings' => array(
+                'displayErrorDetails' => true
+            )
+        )
    );
 
     public static function get($property)
