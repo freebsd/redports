@@ -48,7 +48,7 @@ class Session
         ini_set('session.cookie_httponly', 1);
 
         if (Config::get('https_only') === true) {
-            // only send cookie over https 
+            // only send cookie over https
             ini_set('session.cookie_secure', 1);
         }
 
@@ -85,8 +85,9 @@ class Session
         $_SESSION['loginip'] = $_SERVER['REMOTE_ADDR'];
         $_SESSION['useragent'] = $_SERVER['HTTP_USER_AGENT'];
 
-        if(isset($_SESSION['username']))
+        if (isset($_SESSION['username'])) {
             unset($_SESSION['username']);
+        }
 
         return true;
     }
@@ -96,15 +97,16 @@ class Session
         if (session_id() === '') {
             session_start();
         }
-        
+
         /* login assumed to be successfull */
         $_SESSION['authenticated'] = true;
         $_SESSION['username'] = $username;
         $_SESSION['loginip'] = $_SERVER['REMOTE_ADDR'];
         $_SESSION['useragent'] = $_SERVER['HTTP_USER_AGENT'];
 
-        if(isset($_SESSION['machineid']))
+        if (isset($_SESSION['machineid'])) {
             unset($_SESSION['machineid']);
+        }
 
         return true;
     }

@@ -18,11 +18,11 @@ class Config
         'github.oauth.key'         => '',
         'github.oauth.secret'      => '',
         'github.oauth.redirecturl' => 'https://redports.org/login',
-        'slimconfig' => array(
+        'slimconfig'               => array(
             'settings' => array(
-                'displayErrorDetails' => true
-            )
-        )
+                'displayErrorDetails' => true,
+            ),
+        ),
    );
 
     public static function get($property)
@@ -34,4 +34,3 @@ class Config
         return false;
     }
 }
-
