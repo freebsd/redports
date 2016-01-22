@@ -2,15 +2,16 @@
 Redports is a continuous integration platform for FreeBSD ports.
 
 This is a new attempt to fully automate the redports platform and
-to minimize setup and administration effort.
+to minimize setup and administration effort. This is why we are
+heavily depending on GitHub for user accounts, repositories and
+just integrate into that workflow.
 
 Want to help? IRC #redports (freenode)
 
 
 # TODO
 
-This are the major TODO items before we can do a first
-2.0.0 release.
+This are the major items before we can do a first release.
 
 node:
 - poudriere integration
@@ -18,7 +19,10 @@ node:
   (node/lib/Redports/Node/Process/Child.php)
 
 master:
-- Repository setup via GitHub API
-- GitHub Status API Integration
+- GitHub Status API Integration for build status response
 https://github.com/KnpLabs/php-github-api/blob/master/lib/Github/Api/Repository/Statuses.php
+
+web:
+- register new user at master
+- register new repository at master
 
