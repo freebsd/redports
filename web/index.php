@@ -24,7 +24,7 @@ $container['view'] = function($container){
 };
 
 /* landing page */
-$app->get('/test', function($request, $response, $args) use ($session) {
+$app->get('/', function($request, $response, $args) use ($session) {
    return $this->view->render($response, 'index.html', $args);
 });
 
@@ -75,20 +75,26 @@ $app->get('/repositories', function($request, $response) use ($session) {
    if(!$session->getUsername())
       return $response->withStatus(403)->write('Not authenticated');
 
-   $content = '';
    $client = new \Github\Client();
    $client->authenticate($_SESSION['token'], null, \Github\Client::AUTH_HTTP_TOKEN);
 
-   foreach($client->api('user')->repositories($session->getUsername()) as $repository){
-      $content .= sprintf('<b>%s</b> <a href="/repositories/%s/setup">setup</a><br>%s<br><br>',
-         $repository['full_name'], $repository['name'], $repository['description']);
+   $repos = $client->api('user')->repositories($session->getUsername());
+
+   foreach($repos as $key => $repository){
+      $repos[$key]['redports_enabled'] = false;
+
+      foreach($client->api('repo')->hooks()->all($session->getUsername(), $repository['name']) as $hook){
+         if($hook['name'] == 'web' && strpos($hook['config']['url'], 'redports.org') !== false){
+            $repos[$key]['redports_enabled'] = true;
+         }
+      }
    }
 
-   return $response->withHeader('Content-Type', 'text/html')->write($content);
+   return $this->view->render($response, 'repositories.html', array('repositories' => $repos));
 });
 
 /* GitHub repository setup */
-$app->get('/repositories/{repository}/setup', function($request, $response, $args) use ($session) {
+$app->get('/repositories/{repository}/install', function($request, $response, $args) use ($session) {
    if(!$session->getUsername())
       return $response->withStatus(403)->write('Not authenticated');
 
@@ -119,6 +125,24 @@ $app->get('/repositories/{repository}/setup', function($request, $response, $arg
 
    return $response->withRedirect('/repositories');
 });
+
+/* GitHub repository uninstall */
+$app->get('/repositories/{repository}/uninstall', function($request, $response, $args) use ($session) {
+   if(!$session->getUsername())
+      return $response->withStatus(403)->write('Not authenticated');
+
+   $client = new \Github\Client();
+   $client->authenticate($_SESSION['token'], null, \Github\Client::AUTH_HTTP_TOKEN);
+
+   foreach($client->api('repo')->hooks()->all($session->getUsername(), $args['repository']) as $hook){
+      if($hook['name'] == 'web' && strpos($hook['config']['url'], 'redports.org') !== false){
+         $client->api('repo')->hooks()->remove($session->getUsername(), $args['repository'], $hook['id']);
+      }
+   }
+
+   return $response->withRedirect('/repositories');
+});
+
 
 $app->run();
 

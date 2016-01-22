@@ -1,0 +1,27 @@
+<?php include("_header.html"); ?>
+		<!-- Home -->
+			<div class="wrapper style2 first">
+				<header>
+					<h2>Repository setup</h2>
+					<p>Specify which GitHub repositories that redports should use.</p>
+				</header>
+				<article class="container" id="repositories">
+<?php foreach($repositories as $repository) { ?>
+					<div class="row">
+						<div class="12u 12u(mobile)">
+							<section class="box style1">
+								<h3><?php echo $repository['full_name']; ?></h3>
+								<p><?php echo $repository['description']; ?></p>
+	<?php if($repository['redports_enabled']) { ?>
+								<a href="/repositories/<?php echo $repository['name']; ?>/uninstall" class="button">disable</a>
+	<?php } else { ?>
+								<a href="/repositories/<?php echo $repository['name']; ?>/install" class="button">enable</a>
+	<?php } ?>
+							</section>
+						</div>
+					</div>
+<?php } ?>
+				</article>
+			</div>
+
+<?php include("_footer.html"); ?>
