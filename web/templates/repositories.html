@@ -3,23 +3,24 @@
 			<div class="wrapper style2 first">
 				<header>
 					<h2>Repository setup</h2>
-					<p>Specify which GitHub repositories that redports should use.</p>
+					<p>Specify which GitHub repositories redports should use.</p>
 				</header>
 				<article class="container" id="repositories">
 <?php foreach($repositories as $repository) { ?>
-					<div class="row">
-						<div class="12u 12u(mobile)">
-							<section class="box style1">
-								<h3><?php echo $repository['full_name']; ?></h3>
-								<p><?php echo $repository['description']; ?></p>
+					<div class="row box style1">
+						<div class="8u 12u(mobile)">
+							<h3><?php echo $repository['full_name']; ?></h3>
+							<p><?php echo $repository['description']; ?></p>
+						</div>
+						<div class="4u 12u(mobile)">
 	<?php if($repository['redports_enabled']) { ?>
-								<a href="/repositories/<?php echo $repository['name']; ?>/uninstall" class="button">disable</a>
+							<a href="/repositories/<?php echo $repository['name']; ?>/uninstall" class="button"><i class="fa fa-remove"></i> DISABLE REDPORTS</a>
 	<?php } else { ?>
-								<a href="/repositories/<?php echo $repository['name']; ?>/install" class="button">enable</a>
+							<a href="/repositories/<?php echo $repository['name']; ?>/install" class="button"><i class="fa fa-check"></i> ENABLE REDPORTS</a>
 	<?php } ?>
-							</section>
 						</div>
 					</div>
+					<br /><br />
 <?php } ?>
 				</article>
 			</div>
