@@ -125,7 +125,7 @@ $app->get('/repositories/{repository}/install', function($request, $response, $a
                     'url'          => 'https://api.redports.org/github/',
                     'content_type' => 'json',
                 ),
-            ),
+            )
         );
     } catch (\Github\Exception\RuntimeException $e) {
         return $response->withStatus(500)
