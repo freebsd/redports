@@ -20,7 +20,12 @@ node:
 - business logic for building and talking to master
   (node/lib/Redports/Node/Process/Child.php)
 
+
+## Cleanup after first release
+
 master:
+- Introduce registering user and repository
+- GitHub Webhook: verify repository and use data from registered user
 - GitHub Status API Integration for build status response
 https://github.com/KnpLabs/php-github-api/blob/master/lib/Github/Api/Repository/Statuses.php
 
