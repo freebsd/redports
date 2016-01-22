@@ -19,6 +19,7 @@
 		<!-- Nav -->
 			<nav id="nav">
 				<ul class="container">
+					<li><a href="/">Home</a></li>
 <?php if(isset($_SESSION['username'])) { ?>
 					<li><a href="/repositories">Repositories</a></li>
 					<li><a href="<?php echo $_SESSION['profile_url']; ?>"><?php echo $_SESSION['name']; ?></a></li>
