@@ -21,7 +21,7 @@
 				<ul class="container">
 <?php if(isset($_SESSION['username'])) { ?>
 					<li><a href="/repositories">Repositories</a></li>
-					<li><a href="#">Logged in as <?php echo $_SESSION['username']; ?></a></li>
+					<li><a href="<?php echo $_SESSION['profile_url']; ?>"><?php echo $_SESSION['name']; ?></a></li>
 <?php } else { ?>
 					<li><a href="#benefits">Features</a></li>
 					<li><a href="/login">Login</a></li>

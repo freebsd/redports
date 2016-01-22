@@ -57,6 +57,8 @@ $app->get('/login', function($request, $response) use ($session) {
          /* TODO: register new user at master if it does not exist yet */
 
          $session->login($result['login']);
+         $_SESSION['name'] = $result['name'];
+         $_SESSION['profile_url'] = $result['html_url'];
          $_SESSION['token'] = $token->getAccessToken();
 
          return $response->withRedirect('/repositories');
@@ -78,16 +80,21 @@ $app->get('/repositories', function($request, $response) use ($session) {
    $client = new \Github\Client();
    $client->authenticate($_SESSION['token'], null, \Github\Client::AUTH_HTTP_TOKEN);
 
-   $repos = $client->api('user')->repositories($session->getUsername());
+   try {
+      $repos = $client->api('user')->repositories($session->getUsername());
 
-   foreach($repos as $key => $repository){
-      $repos[$key]['redports_enabled'] = false;
+      foreach($repos as $key => $repository){
+         $repos[$key]['redports_enabled'] = false;
 
-      foreach($client->api('repo')->hooks()->all($session->getUsername(), $repository['name']) as $hook){
-         if($hook['name'] == 'web' && strpos($hook['config']['url'], 'redports.org') !== false){
-            $repos[$key]['redports_enabled'] = true;
+         foreach($client->api('repo')->hooks()->all($session->getUsername(), $repository['name']) as $hook){
+            if($hook['name'] == 'web' && strpos($hook['config']['url'], 'redports.org') !== false){
+               $repos[$key]['redports_enabled'] = true;
+            }
          }
       }
+   } catch (\Github\Exception\RuntimeException $e){
+      return $response->withStatus(500)
+                      ->write($e->getMessage());
    }
 
    return $this->view->render($response, 'repositories.html', array('repositories' => $repos));
@@ -101,25 +108,30 @@ $app->get('/repositories/{repository}/install', function($request, $response, $a
    $client = new \Github\Client();
    $client->authenticate($_SESSION['token'], null, \Github\Client::AUTH_HTTP_TOKEN);
 
-   foreach($client->api('repo')->hooks()->all($session->getUsername(), $args['repository']) as $hook){
-      if($hook['name'] == 'web' && strpos($hook['config']['url'], 'redports.org') !== false){
-         $client->api('repo')->hooks()->remove($session->getUsername(), $args['repository'], $hook['id']);
+   try {
+      foreach($client->api('repo')->hooks()->all($session->getUsername(), $args['repository']) as $hook){
+         if($hook['name'] == 'web' && strpos($hook['config']['url'], 'redports.org') !== false){
+            $client->api('repo')->hooks()->remove($session->getUsername(), $args['repository'], $hook['id']);
+         }
       }
-   }
 
-   $webhook = $client->api('repo')->hooks()->create($session->getUsername(), $args['repository'],
-      array(
-         'name' => 'web',
-         'active' => true,
-         'events' => array(
-            'push'
-         ),
-         'config' => array(
-            'url' => 'https://api.redports.org/github/',
-            'content_type' => 'json'
+      $webhook = $client->api('repo')->hooks()->create($session->getUsername(), $args['repository'],
+         array(
+            'name' => 'web',
+            'active' => true,
+            'events' => array(
+               'push'
+            ),
+            'config' => array(
+               'url' => 'https://api.redports.org/github/',
+               'content_type' => 'json'
+            )
          )
-      )
-   );
+      );
+   } catch (\Github\Exception\RuntimeException $e){
+      return $response->withStatus(500)
+                      ->write($e->getMessage());
+   }
 
    /* TODO: register repository at master */
 
@@ -134,10 +146,15 @@ $app->get('/repositories/{repository}/uninstall', function($request, $response, 
    $client = new \Github\Client();
    $client->authenticate($_SESSION['token'], null, \Github\Client::AUTH_HTTP_TOKEN);
 
-   foreach($client->api('repo')->hooks()->all($session->getUsername(), $args['repository']) as $hook){
-      if($hook['name'] == 'web' && strpos($hook['config']['url'], 'redports.org') !== false){
-         $client->api('repo')->hooks()->remove($session->getUsername(), $args['repository'], $hook['id']);
+   try {
+      foreach($client->api('repo')->hooks()->all($session->getUsername(), $args['repository']) as $hook){
+         if($hook['name'] == 'web' && strpos($hook['config']['url'], 'redports.org') !== false){
+            $client->api('repo')->hooks()->remove($session->getUsername(), $args['repository'], $hook['id']);
+         }
       }
+   } catch (\Github\Exception\RuntimeException $e){
+      return $response->withStatus(500)
+                      ->write($e->getMessage());
    }
 
    return $response->withRedirect('/repositories');
