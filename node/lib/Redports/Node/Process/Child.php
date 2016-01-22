@@ -63,10 +63,32 @@ class Child
         return true;
     }
 
+    protected function downloadFile($url, $file)
+    {
+        $fr = fopen($url, 'r');
+        $fw = fopen($file, 'w');
+        
+        if (stream_copy_to_stream($fr, $fw) < 1) {
+            return false;
+        }
+
+        fclose($fw);
+        fclose($fr);
+
+        return true;
+    }
+
     public function preparePortstree()
     {
-        /* TODO: download overlay, zfs snapshot, apply */
-      return false;
+        /* TODO: zfs snapshot */
+
+        $overlay = $this->_jail->getFilesystem().'/portsoverlay.tar.gz';
+        if(!$this->downloadFile($this->_job['portsoverlay'], $overlay))
+            return false;
+
+        /* TODO: apply overlay */
+
+        return false;
     }
 
     public function bulkBuild()
