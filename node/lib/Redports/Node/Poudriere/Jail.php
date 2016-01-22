@@ -41,29 +41,29 @@ class Jail
             $parts = explode(':', $line, 2);
             $tmp = explode(' ', $parts[0], 2);
 
-            $key = trim($tmp[1]);
+            $key = trim($tmp[0].' '.$tmp[1]);
             $value = trim($parts[1]);
 
             switch ($key) {
-            case 'name':
+            case 'Jail name':
                $this->_jailname = $value;
             break;
-            case 'version':
+            case 'Jail version':
                $this->_version = $value;
             break;
-            case 'arch':
+            case 'Jail arch':
                $this->_arch = $value;
             break;
-            case 'method':
+            case 'Jail method':
                $this->_method = $value;
             break;
-            case 'mount':
+            case 'Jail mount':
                $this->_path = $value;
             break;
-            case 'fs':
+            case 'Jail fs':
                $this->_fs = $value;
             break;
-            case 'updated':
+            case 'Jail updated':
                $this->_updated = $value;
             break;
          }
