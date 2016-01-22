@@ -4,7 +4,7 @@
    "chmod": "0755",
    "directories": ["lib"],
    "main": "bin/redports-node",
-   "output": "redports-node-0.1.1.phar",
+   "output": "redports-node-0.1.2.phar",
    "stub": true,
    "key": "private.key",
    "finder": [
@@ -20,7 +20,7 @@
       }
    ],
    "replacements": {
-      "node_version": "0.1.1"
+      "node_version": "0.1.2"
    }
 }
 
