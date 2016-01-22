@@ -1,3 +1,5 @@
+[![StyleCI](https://styleci.io/repos/32724433/shield)](https://styleci.io/repos/32724433)
+
 # redports
 Redports is a continuous integration platform for FreeBSD ports.
 
