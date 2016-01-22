@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	redports-node
-PORTVERSION=	0.1.1
+PORTVERSION=	0.1.2
 CATEGORIES=	ports-mgmt
 MASTER_SITES=	https://api.redports.org/downloads/
 DISTFILES=	${PORTNAME}-${DISTVERSION}.phar ${PORTNAME}-${DISTVERSION}.phar.pubkey
@@ -18,7 +18,6 @@ RUN_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:${PORTSDIR}/security/ca_ro
 
 NO_BUILD=	yes
 USE_PHP=	curl hash json openssl pcntl phar
-DEFAULT_VERSIONS=	php=56
 USE_RC_SUBR=	redportsnode
 
 SUB_FILES=	redports-node.json.sample
